@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="he">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>סורק QR</title>
+    <link rel="stylesheet" href="qr.css" />
+  </head>
+
+  <body>
+    <header>
+      <nav class="navbar">
+        <div class="logo-icon">
+          <a href="/homepage/index.html">
+            <img src="/homepage/styles/images/logo.png" alt="Logo" />
+          </a>
+        </div>
+        <div class="menu">
+          <ul>
+            <li><a href="/qr/qr.html">Assigning Equipment</a></li>
+            <li><a href="/warehouse/index.html">Warehouse</a></li>
+            <li><a href="/history/history.html">History</a></li>
+          </ul>
+        </div>
+        <div class="profile-icon">
+          <img src="/homepage/styles/svg/profile.svg" alt="Profile" />
+        </div>
+      </nav>
+    </header>
+    <div class="qr-container">
+      <div class="qr-camera">
+        <h1 class="qr-header">Scan QR Code</h1>
+        <div class="qr-reader" id="qr-reader"></div>
+      </div>
+      <div>
+        <div class="qr-results" id="qr-reader-results"></div>
+      </div>
+      <div class="qr-product-data" id="productData">
+        <span id="productName"></span>
+        <span id="productDescription"></span>
+        <span id="productStatus"></span>
+        <span id="assignedTo"></span>
+      </div>
+      <div id="assigningDiv">
+        <label for="soldierId">Personal number</label>
+        <input
+          type="text"
+          id="soldierId"
+          name="soldierId"
+          placeholder="Enter soldier personal number"
+          required
+        />
+        <button type="button" id="assignsoldier">Assign</button>
+        <div id="errorAssign"></div>
+      </div>
+      <button id="tryAgainBTN">Scan Again</button>
+    </div>
+
+    <script src="https://unpkg.com/html5-qrcode@2.0.1/minified/html5-qrcode.min.js"></script>
+    <script src="qr.js"></script>
+  </body>
+</html>

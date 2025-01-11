@@ -1,0 +1,287 @@
+:root {
+  --gray-100: #e3e5e7;
+  --gray-200: #c1c3c5;
+  --gray-300: #a0a3c5;
+  --gray-400: #7d7f81;
+  --gray-500: #4b4e54;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* .filterDiv {
+  display: flex;
+  justify-content: center;
+} */
+#exportCSVBtn {
+  background-color: #4caf50; /* Green background */
+  color: white; /* White text */
+  font-size: 16px; /* Set font size */
+  padding: 10px 20px; /* Add padding */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Show pointer cursor */
+  transition: background-color 0.3s ease; /* Smooth background transition */
+  margin: 20px auto; /* Auto margin to center horizontally */
+  display: block; /* Make button a block element */
+}
+#exportCSVBtn:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+#exportCSVBtn:active {
+  background-color: #3e8e41; /* Even darker green when clicked */
+}
+
+.filter-search-section {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 1rem auto;
+  width: 80%;
+  max-width: 800px;
+}
+
+.filterDiv {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%; /* Ensures it stretches to full width of the container */
+}
+
+#searchInput {
+  padding: 8px 12px;
+  font-size: 1rem;
+  width: 200px;
+  border-radius: 4px;
+  border: 1px solid var(--gray-300);
+}
+
+#historyFilter,
+#sortSelect {
+  padding: 8px 12px;
+  font-size: 1rem;
+  width: 200px;
+  border-radius: 4px;
+  border: 1px solid var(--gray-300);
+  margin-top: 5px;
+}
+
+.reset-button {
+  background-color: var(--gray-100);
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--gray-500);
+  transition: background-color 0.3s;
+}
+
+.reset-button:hover {
+  background-color: var(--gray-200);
+}
+
+.container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--gray-500);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th,
+td {
+  padding: 1.2rem;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: var(--gray-500);
+  color: var(--gray-100);
+}
+
+tr:nth-child(even) {
+  background-color: var(--gray-100);
+}
+
+tr:hover {
+  background-color: var(--gray-200);
+}
+
+footer {
+  background-color: var(--gray-100);
+  color: var(--gray-500);
+  padding: 2rem 0;
+  text-align: center;
+  /* position: fixed; */
+  bottom: 0;
+  width: 100%;
+  font-family: "Open Sans", sans-serif;
+}
+
+.footer-content {
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+footer p {
+  margin: 0;
+  font-size: 0.7rem;
+}
+
+.social-media {
+  margin-top: 1rem;
+}
+
+.social-media a {
+  color: var(--gray-500);
+  margin: 0 1rem;
+  font-size: 1.25rem;
+  transition: color 0.3s;
+}
+
+.menu {
+  margin-left: 40rem;
+}
+
+.menu ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.menu ul li {
+  position: relative;
+}
+
+.menu ul li a {
+  text-decoration: none;
+  color: var(--gray-500);
+  font-size: 1.2rem;
+  font-weight: 400;
+  padding: 8px 12px;
+  transition: color 0.3s, background-color 0.3s;
+  border-radius: 4px;
+}
+
+.menu ul li a:hover {
+  background-color: #374151;
+  color: #ffffff;
+}
+
+header {
+  background-color: var(--gray-100);
+  font-family: "Open Sans", sans-serif;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  gap: 10px;
+}
+
+nav .logo-icon img {
+  width: 15rem;
+  transition: transform 0.3s ease;
+}
+
+nav .profile-icon img {
+  width: 35px;
+  transition: transform 0.3s ease;
+}
+
+nav .logo-icon img:hover,
+nav .profile-icon img:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+/* .pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-btn {
+  padding: 10px 20px;
+  margin: 5px;
+  background-color: var(--gray-200);
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.pagination-btn:hover {
+  background-color: var(--gray-300);
+}
+
+.pagination-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed; */
+/* } */
+
+.pagination-container {
+  gap: 5px;
+  position: sticky; /* Always visible at the bottom of the container */
+  bottom: 0;
+  background-color: white; /* Match container background */
+  padding: 10px 0;
+  border-top: 1px solid var(--gray-300);
+  display: flex;
+  justify-content: center;
+}
+
+.pagination-btn {
+  padding: 8px 12px;
+  background-color: var(--gray-100);
+  border: 1px solid var(--gray-300);
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pagination-btn:hover {
+  background-color: var(--gray-300);
+}
+
+.pagination-btn.active {
+  font-weight: bold;
+  background-color: var(--gray-500);
+  color: white;
+}
+
+.ppagination-btn.disabled {
+  color: var(--gray-300);
+  cursor: not-allowed;
+  background-color: var(--gray-200);
+}

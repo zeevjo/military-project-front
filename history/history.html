@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product History</title>
+    <link rel="stylesheet" href="history.css" />
+    <script
+      src="https://kit.fontawesome.com/572b007657.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body>
+    <header>
+      <nav class="navbar">
+        <div class="logo-icon">
+          <a href="/homepage/index.html">
+            <img src="/homepage/styles/images/logo.png" alt="Logo" />
+          </a>
+        </div>
+        <div class="menu">
+          <ul>
+            <li><a href="/qr/qr.html">Assigning Equipment</a></li>
+            <li><a href="/warehouse/index.html">Warehouse</a></li>
+            <li><a href="/history/history.html">History</a></li>
+          </ul>
+        </div>
+        <div class="profile-icon">
+          <img src="/homepage/styles/svg/profile.svg" alt="Profile" />
+        </div>
+      </nav>
+    </header>
+    <div class="historyContainer">
+      <button
+        id="exportCSVBtn"
+        class="export-button"
+        onclick="exportTableToCSV()"
+      >
+        Export to CSV
+      </button>
+      <div class="filter-search-section">
+        <div class="filterDiv">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by Product type"
+            oninput="applySearchAndFilters()"
+          />
+          <div>
+            <label for="historyFilter">Filter by:</label>
+            <select id="historyFilter" onchange="applySearchAndFilters()">
+              <option value="">All</option>
+              <option value="inStock">In Stock</option>
+              <option value="available">Available</option>
+              <option value="underMaintenance">Under Maintenance</option>
+              <option value="assigned">Assigned</option>
+            </select>
+            <br />
+            <label for="sortSelect">Sort by:</label>
+            <select id="sortSelect" onchange="applySort()">
+              <option value="">Select</option>
+              <option value="productType">Product Type</option>
+              <option value="status">Status</option>
+              <option value="soldierId">Soldier ID</option>
+              <option value="soldierFullName">Soldier Full Name</option>
+              <option value="date">Date</option>
+            </select>
+          </div>
+          <button onclick="resetFilters()" class="reset-button">
+            Reset Filters
+          </button>
+        </div>
+      </div>
+      <div class="container">
+        <h1>History Overview</h1>
+        <table id="inventoryTable" border="1">
+          <thead>
+            <tr>
+              <th>Product Type</th>
+              <th>Status</th>
+              <th>Soldier ID</th>
+              <th>Soldier Full Name</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data will be dynamically inserted here -->
+          </tbody>
+        </table>
+        <div class="pagination-container">
+          <div>
+            <button
+              id="prevPage"
+              class="pagination-btn"
+              onclick="changePage('prev')"
+            >
+              Previous
+            </button>
+            <button
+              id="nextPage"
+              class="pagination-btn"
+              onclick="changePage('next')"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Pagination buttons -->
+    <footer>
+      <div class="footer-content">
+        <p>&copy; 2023 Military Equipment Management. All rights reserved.</p>
+        <div class="social-media">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </footer>
+    <script src="history.js"></script>
+  </body>
+</html>

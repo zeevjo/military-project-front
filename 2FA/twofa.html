@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="twofa.css">
+  <title>Two-Factor Authentication</title>
+</head>
+<body>
+  <div class="main-container">
+    <h1 class="authy-main">Two-Factor Authentication</h1>
+    <p class="authy-secondary">
+      To ensure security, only authorized personnel can approve weapon assignments. <br> Please verify your identity by entering the code sent to your email.
+    </p>
+    <button class="getcode-btn">Get Code</button>
+    <form id="otp-form" class="otp-form">
+      <input type="text" id="otp-input" class="otp-input" placeholder="Enter your code" required>
+      <button type="submit" class="submit-btn">Submit</button>
+    </form>
+    <div class="resend-container">
+      <p>Didn't receive your code?</p>
+      <button id="resend-code" class="resend-btn" type="button">Resend Code</button>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script src="twofa.js"></script>
+</body>
+</html>

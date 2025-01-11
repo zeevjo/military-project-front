@@ -1,0 +1,7 @@
+@import url(/homepage/styles/colors.css);
+@import url(/homepage/styles/fonts.css);
+@import url(/homepage/styles/resets.css);
+
+/* pages */
+
+@import url(/homepage/styles/pages/homepage.css);

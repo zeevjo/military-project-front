@@ -1,0 +1,10 @@
+.hero {
+  padding: 2rem;
+}
+
+.hero h1 {
+  font-family: "Open Sans", sans-serif;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 900;
+}

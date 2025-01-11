@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Warehouse Stock</title>
+    <link rel="stylesheet" href="style.css" />
+    <script
+      src="https://kit.fontawesome.com/572b007657.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <div class="logo-icon">
+          <a href="/homepage/index.html">
+            <img src="/homepage/styles/images/logo.png" alt="Logo" />
+          </a>
+        </div>
+        <div class="menu">
+          <ul>
+            <li><a href="/qr/qr.html">Assigning Equipment</a></li>
+            <li><a href="/warehouse/index.html">Warehouse</a></li>
+            <li><a href="/history/history.html">History</a></li>
+          </ul>
+        </div>
+        <div class="profile-icon">
+          <img src="/homepage/styles/svg/profile.svg" alt="Profile" />
+        </div>
+      </nav>
+    </header>
+    <button
+      id="exportCSVBtn"
+      class="export-button"
+      onclick="exportTableToCSV()"
+    >
+      Export to CSV
+    </button>
+    <section class="filter-search-section">
+      <div class="filter-search-container">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search by Product Name"
+          oninput="applySearchAndFilters()"
+        />
+
+        <label for="stockFilter">Filter by Stock Availability:</label>
+        <select id="stockFilter" onchange="applySearchAndFilters()">
+          <option value="">All</option>
+          <option value="totalInStock">In Stock</option>
+          <option value="totalAvailable">Available</option>
+          <option value="totalUnderMaintenance">Under Maintenance</option>
+          <option value="totalAssigned">Assigned</option>
+        </select>
+
+        <button onclick="resetFilters()" class="reset-button">
+          Reset Filters
+        </button>
+      </div>
+    </section>
+    <div class="container">
+      <h1>Warehouse Stock Overview</h1>
+      <table id="inventoryTable" border="1">
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Total in Stock</th>
+            <th>Total Available</th>
+            <th>Total Under Maintenance</th>
+            <th>Total Assigned</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data will be dynamically inserted here -->
+        </tbody>
+      </table>
+      <div id="pagination">
+        <button
+          class="page-button"
+          id="prevButton"
+          onclick="changePage('prev')"
+        >
+          Previous
+        </button>
+        <!-- Page numbers will be populated here -->
+        <button
+          class="page-button"
+          id="nextButton"
+          onclick="changePage('next')"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+    <footer>
+      <div class="footer-content">
+        <p>&copy; 2023 Military Equipment Management. All rights reserved.</p>
+        <div class="social-media">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>

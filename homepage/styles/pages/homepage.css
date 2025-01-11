@@ -1,0 +1,52 @@
+@import url(/homepage/styles/components/navbar.css);
+@import url(/homepage/styles/components/hero.css);
+@import url(/homepage/styles/components/menu.css);
+@import url(/homepage/styles/components/footer.css);
+
+@media (min-width: 768px) {
+  header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .navbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo-icon {
+    flex: 1;
+  }
+
+  .nav-links {
+    flex: 3;
+    display: flex;
+    justify-content: center;
+  }
+
+  .nav-links ul {
+    display: flex;
+  }
+
+  .nav-links li {
+    margin: 0 15px;
+  }
+
+  .profile-icon {
+    margin-right: 20px;
+  }
+
+  /* For the menu on desktop, adjust the menu styling */
+  .menu {
+    height: auto;
+    margin-top: 20px;
+  }
+
+  .menu a {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+}
