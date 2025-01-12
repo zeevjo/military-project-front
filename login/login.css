@@ -108,3 +108,15 @@ body {
     border-radius: 6px;
     display: none;
 }
+
+.success-message {
+    color: var(--gray-400);
+    font-size: 14px;
+    margin-top: 15px;
+    padding: 10px;
+    text-align: center;
+    background-color: #c9fb9cc1;
+    border: 1px solid #baff7d;
+    border-radius: 6px;
+    display: none;
+}
