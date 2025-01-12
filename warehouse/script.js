@@ -121,5 +121,5 @@ function exportTableToCSV() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    applySearchAndFilters() // Display first page and apply filters
+    applySearchAndFilters()
 })
