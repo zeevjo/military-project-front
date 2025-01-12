@@ -322,11 +322,11 @@ nav .profile-icon img:hover {
   }
 
   #searchInput {
-    width: none;
+    width: auto;
   }
 
   #stockFilter {
-    widdth;
+    width: auto;
   }
 
   .social-media a {
