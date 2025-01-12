@@ -1,6 +1,7 @@
 header {
   background-color: var(--gray-100);
   font-family: "open-sans", sans-serif;
+  flex-shrink: 0; /* Prevent header/footer from shrinking */
 }
 
 nav {

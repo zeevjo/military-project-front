@@ -79,20 +79,21 @@
     gap: 2rem;
     padding: 2rem;
     width: 100%;
+    margin: 0;
   }
 
   .menu ul {
-    display: flex; /* Make the list items appear side by side */
-    flex-direction: row; /* Horizontal layout */
-    justify-content: center; /* Center items */
-    gap: 2rem; /* Space between items */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 2rem;
     margin: 0;
     padding: 0;
     width: 100%;
   }
 
   .menu ul li {
-    width: 400px; /* Increase width of list items */
+    width: 30%; /* Increase width of list items */
     height: auto;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     transition: 0.3s transform ease;
@@ -105,17 +106,19 @@
 
   .menu ul li a {
     font-size: 1.5rem; /* Adjust font size */
-    padding: 1rem; /* Adjust padding for spacing */
+    padding: 0; /* Adjust padding for spacing */
     text-align: center; /* Center align text */
     display: block; /* Ensure the link fills the list item */
   }
 
   .main-content {
-    /* margin: 2rem; */
-    padding: 1rem;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
+    flex-grow: 1; /* Allow the main content to expand */
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    height: 100vh; /* Fill the viewport */
+    box-sizing: border-box;
   }
 
   .nav {
