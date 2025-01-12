@@ -11,15 +11,25 @@ body {
   background-color: #f4f4f9;
   margin: 0;
   padding: 0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
 /* .filterDiv {
   display: flex;
   justify-content: center;
 } */
+
+.container {
+  height: calc(80vh - 15vh);
+  overflow-y: auto; /* Enable vertical scrolling */
+  margin: 20px auto;
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative; /* To position pagination */
+  max-width: 800px;
+}
+
 #exportCSVBtn {
   background-color: #4caf50; /* Green background */
   color: white; /* White text */
@@ -46,59 +56,71 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin: 1rem auto;
-  width: 80%;
+  width: 90%;
   max-width: 800px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  box-sizing: border-box;
 }
 
 .filterDiv {
   display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
+  gap: 1rem;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: space-between;
-  width: 100%; /* Ensures it stretches to full width of the container */
+  width: 100%;
+}
+
+.filterDiv div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+label {
+  font-size: 1rem;
+  color: var(--gray-500);
+}
+
+#searchInput,
+#historyFilter,
+#sortSelect {
+  padding: 10px 15px;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid var(--gray-300);
+}
+#historyFilter,
+#sortSelect {
+  padding: 10px 15px;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid var(--gray-300);
+  width: 6rem;
 }
 
 #searchInput {
-  padding: 8px 12px;
-  font-size: 1rem;
-  width: 200px;
-  border-radius: 4px;
-  border: 1px solid var(--gray-300);
-}
-
-#historyFilter,
-#sortSelect {
-  padding: 8px 12px;
-  font-size: 1rem;
-  width: 200px;
-  border-radius: 4px;
-  border: 1px solid var(--gray-300);
-  margin-top: 5px;
+  max-width: 300px; /* Limits the maximum size */
+  width: 9rem;
 }
 
 .reset-button {
   background-color: var(--gray-100);
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
   color: var(--gray-500);
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .reset-button:hover {
   background-color: var(--gray-200);
-}
-
-.container {
-  max-width: 800px;
-  margin: 50px auto;
-  padding: 20px;
-  background: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
 }
 
 h1 {
@@ -110,17 +132,21 @@ h1 {
 table {
   width: 100%;
   border-collapse: collapse;
+  font-size: clamp(0.875rem, 2vw, 1rem);
   margin-top: 20px;
 }
 
 th,
 td {
-  padding: 1.2rem;
+  padding: clamp(0.5rem, 2vw, 1.2rem);
   text-align: center;
   border: 1px solid #ddd;
 }
 
 th {
+  position: sticky;
+  top: 0;
+  /* z-index: 1; */
   background-color: var(--gray-500);
   color: var(--gray-100);
 }
@@ -138,7 +164,6 @@ footer {
   color: var(--gray-500);
   padding: 2rem 0;
   text-align: center;
-  /* position: fixed; */
   bottom: 0;
   width: 100%;
   font-family: "Open Sans", sans-serif;
@@ -166,7 +191,10 @@ footer p {
 }
 
 .menu {
-  margin-left: 40rem;
+  margin-left: auto; /* Align menu properly */
+  padding: 0 1rem; /* Add padding for consistency */
+  max-width: 100%; /* Ensure menu fits the screen */
+  box-sizing: border-box; /* Include padding in the width calculation */
 }
 
 .menu ul {
@@ -189,6 +217,9 @@ footer p {
   padding: 8px 12px;
   transition: color 0.3s, background-color 0.3s;
   border-radius: 4px;
+  max-width: 100%; /* Ensure links don't exceed the container */
+  overflow-wrap: break-word; /* Break long words to fit the container */
+  white-space: normal; /* Allow wrapping instead of a single line */
 }
 
 .menu ul li a:hover {
@@ -207,15 +238,17 @@ nav {
   justify-content: space-between;
   padding: 0 1rem;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 nav .logo-icon img {
-  width: 15rem;
+  /* width: 15rem; */
+  width: clamp(8rem, 30vw, 15rem);
   transition: transform 0.3s ease;
 }
 
 nav .profile-icon img {
-  width: 35px;
+  width: clamp(30px, 5vw, 35px);
   transition: transform 0.3s ease;
 }
 
@@ -252,14 +285,14 @@ nav .profile-icon img:hover {
 /* } */
 
 .pagination-container {
-  gap: 5px;
-  position: sticky; /* Always visible at the bottom of the container */
-  bottom: 0;
-  background-color: white; /* Match container background */
-  padding: 10px 0;
-  border-top: 1px solid var(--gray-300);
   display: flex;
   justify-content: center;
+  gap: 5px;
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  padding: 10px 0;
+  border-top: 1px solid var(--gray-300);
 }
 
 .pagination-btn {
@@ -284,4 +317,65 @@ nav .profile-icon img:hover {
   color: var(--gray-300);
   cursor: not-allowed;
   background-color: var(--gray-200);
+}
+
+@media screen and (max-width: 480px) {
+  nav {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .container {
+    margin: 10px 5px;
+  }
+
+  .menu {
+    order: 3;
+    margin: auto;
+    padding: 10px 0; /* Add padding for consistency */
+    padding-block-end: 1rem;
+  }
+
+  .menu ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .menu ul li {
+    width: 100%;
+    text-align: center;
+  }
+
+  .filter-search-section {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filterDiv {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filterDiv div {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #historyFilter {
+    width: auto;
+  }
+
+  #sortSelect {
+    width: auto;
+  }
+
+  #searchInput {
+    width: auto;
+  }
+
+  .social-media a {
+    margin: 0 0.25rem;
+  }
 }
