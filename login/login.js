@@ -3,7 +3,7 @@ const loginForm = document.getElementById("loginForm");
 const errorMessage = document.getElementById("errorMessage");
 const successMessage = document.getElementById("successMessage");
 
-loginBTN.addEventListener("click", function(event) {
+loginBTN.addEventListener("click", async function(event) {
     event.preventDefault();  
 
     errorMessage.style.display = 'none';
@@ -29,33 +29,33 @@ loginBTN.addEventListener("click", function(event) {
         return;
     }
 
-    fetch('http://localhost:8080/api/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)  
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.success){
+    try {
+        const response = await fetch('http://localhost:8080/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+        const data = await response.json();  // מחכים לקבל את התגובה מהשרת
+
+        if (data.success) {
             localStorage.setItem("username", userData.username);
             localStorage.setItem("token", data.token);
-            
-            successMessage.style.display = 'block';
-            successMessage.innerHTML = data.message;
-            
-            setTimeout(()=>{
-                window.location.href = "/homepage/index.html"
+
+            errorMessage.style.display = 'block';
+            errorMessage.innerHTML = data.message;
+
+            setTimeout(() => {
+                window.location.href = "/homepage/index.html";
             }, 2000);
-        }else{
+        } else {
             errorMessage.style.display = 'block';
             errorMessage.innerHTML = data.message;
         }
-    })
-    .catch(error => {
+    } catch (error) {
         errorMessage.style.display = 'block';
         errorMessage.innerHTML = 'Error: ' + error.message;
         console.error('Error:', error);
-    });
+    }
 });
