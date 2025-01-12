@@ -3,13 +3,30 @@
   emailjs.init("t73-CEmjPINBtcZxm")
 })()
 
+// document.addEventListener("DOMContentLoaded", function () {
+
+
+//   // const userEmail = localStorage.getItem('username');
+
+//   if (!recipientEmail) {
+//     alert("No email found. Please log in first.");
+//     window.location.href = "login.html";
+//     return;
+//   }
+// });
+
 
 function generateOTP() {
   return Math.floor(1000 + Math.random() * 9000).toString()
 }
 
 document.querySelector(".getcode-btn").addEventListener("click", function () {
-  const recipientEmail = "smdg_972@outlook.com"
+  const recipientEmail = localStorage.getItem('username');
+  if (!recipientEmail) {
+    alert("No email found. Please log in first.");
+    window.location.href = "../login/login.html";
+    return;
+  }
   let generatedOTP = generateOTP()
   console.log(`Generated OTP: ${generatedOTP}`)
 
@@ -19,6 +36,8 @@ document.querySelector(".getcode-btn").addEventListener("click", function () {
       to_email: email,
       otp_code: otp,
     }
+
+
 
     emailjs
       .send("service_fy4nys9", "template_zmkuiff", templateParams)
@@ -58,7 +77,7 @@ document.querySelector(".getcode-btn").addEventListener("click", function () {
       })
         .then(response => response.json())
         .then(data => {
-          console.log('Assign successful:', data)
+          console.log('Assignment successful:', data)
           window.location.href = "../qr/qr.html"
 
         })
