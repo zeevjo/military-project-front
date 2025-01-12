@@ -7,7 +7,7 @@ footer {
   bottom: 0;
   width: 100%;
   font-family: "Open Sans", sans-serif;
-  position: fixed;
+  flex-shrink: 0; /* Prevent header/footer from shrinking */
 }
 
 .footer-content {

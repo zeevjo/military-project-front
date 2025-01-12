@@ -50,6 +50,7 @@
 
 @media (min-width: 768px) {
   header {
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -74,46 +75,53 @@
   }
 
   .menu {
-    height: auto;
-    margin-top: 20px;
-  }
-
-  .menu a {
-    padding: 10px 20px;
-    font-size: 16px;
-  }
-}
-
-@media (min-width: 768px) {
-  .menu {
     display: flex;
-    flex-direction: column; /* Ensure items can center vertically */
-    justify-content: center; /* Vertically center the items */
-    align-items: center; /* Horizontally center the items */
+    gap: 2rem;
+    padding: 2rem;
+    width: 100%;
+    margin: 0;
   }
 
   .menu ul {
-    gap: 3rem;
-    margin-block-start: 7.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+    width: 100%;
   }
 
   .menu ul li {
-    margin: 0;
-    height: 8rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 45vw;
+    width: 30%; /* Increase width of list items */
+    height: auto;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    transition: 0.3s transform ease;
+    border-radius: 8px;
+  }
+
+  .menu ul li:hover {
+    transform: scale(1.05);
   }
 
   .menu ul li a {
-    padding: 8px 12px;
-    text-align: center;
-    font-size: 2rem;
+    font-size: 1.5rem; /* Adjust font size */
+    padding: 0; /* Adjust padding for spacing */
+    text-align: center; /* Center align text */
+    display: block; /* Ensure the link fills the list item */
+  }
+
+  .main-content {
+    flex-grow: 1; /* Allow the main content to expand */
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    height: 100vh; /* Fill the viewport */
+    box-sizing: border-box;
   }
 
   .nav {
-    margin-inline: 1rem;
+    margin-inline: 2rem;
   }
 }

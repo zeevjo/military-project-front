@@ -42,11 +42,9 @@
   /* For the menu on desktop, adjust the menu styling */
   .menu {
     height: auto;
-    margin-top: 20px;
   }
 
   .menu a {
-    padding: 10px 20px;
     font-size: 16px;
   }
 }

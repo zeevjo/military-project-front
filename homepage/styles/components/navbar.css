@@ -1,6 +1,7 @@
 header {
   background-color: var(--gray-100);
   font-family: "open-sans", sans-serif;
+  flex-shrink: 0; /* Prevent header/footer from shrinking */
 }
 
 nav {
@@ -51,7 +52,6 @@ nav .profile-icon img:hover {
     display: flex;
     justify-content: center;
     width: 100%;
-    margin-top: 20px;
   }
 
   .nav-links ul {
