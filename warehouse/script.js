@@ -7,6 +7,61 @@ if (!token) {
     window.location.href = href = "/login/login.html"
 }
 
+const mockData = [
+    { productName: "Carbon Fiber Rope", currentStatus: "Available", lastModified: "2025-01-10", modifiedBySoldier: "John Doe" },
+    { productName: "Carbon Fiber Rope", currentStatus: "Assigned", lastModified: "2025-01-11", modifiedBySoldier: "Jane Smith" },
+    { productName: "Advanced Survival Kit", currentStatus: "Maintenance", lastModified: "2025-01-12", modifiedBySoldier: "Mike Lee" },
+    { productName: "Advanced Survival Kit", currentStatus: "Available", lastModified: "2025-01-13", modifiedBySoldier: "Anna Taylor" },
+]
+
+// Function to add click event listeners to table rows
+function addRowClickEvent() {
+    const rows = document.querySelectorAll("#inventoryTable tbody tr")
+    rows.forEach(row => {
+        row.addEventListener("click", () => {
+            const productName = row.querySelector("td").textContent.trim()
+            showProductDetails(productName)
+        })
+    })
+}
+
+// Function to show product details for a specific productName
+function showProductDetails(productName) {
+    // Filter mock data by productName
+    const filteredData = mockData.filter(item => item.productName === productName)
+
+    // Update table headers
+    const tableHead = document.querySelector("#inventoryTable thead")
+    tableHead.innerHTML = `
+        <tr>
+            <th>Product Name</th>
+            <th>Current Status</th>
+            <th>Last Modified</th>
+            <th>Modified By Soldier</th>
+        </tr>
+    `
+
+    // Populate table with filtered data
+    const tableBody = document.querySelector("#inventoryTable tbody")
+    tableBody.innerHTML = "" // Clear existing rows
+
+    if (filteredData.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="4">No data available</td></tr>`
+        return
+    }
+
+    filteredData.forEach(item => {
+        const row = document.createElement("tr")
+        row.innerHTML = `
+            <td>${item.productName}</td>
+            <td>${item.currentStatus}</td>
+            <td>${item.lastModified}</td>
+            <td>${item.modifiedBySoldier}</td>
+        `
+        tableBody.appendChild(row)
+    })
+}
+
 async function applySearchAndFilters() {
     const token = localStorage.getItem("token")
 
@@ -86,6 +141,8 @@ function populateTable(data) {
         `
         tableBody.appendChild(row)
     })
+
+    addRowClickEvent()
 }
 
 function updatePagination(filteredData) {
