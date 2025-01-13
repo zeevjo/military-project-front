@@ -28,7 +28,10 @@ function generateOTP() {
 document.querySelector(".getcode-btn").addEventListener("click", function () {
   const recipientEmail = localStorage.getItem('username')
   if (!recipientEmail) {
-    alert("No email found. Please log in first.")
+    alertify.alert("This is an alert dialog.", function(){
+      alertify.error("No email found. Please log in first.")
+    });
+    
     window.location.href = "../login/login.html"
     return
   }
@@ -42,14 +45,12 @@ document.querySelector(".getcode-btn").addEventListener("click", function () {
       otp_code: otp,
     }
 
-
-
     emailjs
       .send("service_fy4nys9", "template_zmkuiff", templateParams)
       .then(
         function (response) {
           console.log("Email sent:", response)
-
+          alertify.success("Email sent");
         },
         function (error) {
           console.error("Error:", error)
@@ -64,6 +65,7 @@ document.querySelector(".getcode-btn").addEventListener("click", function () {
     const enteredOTP = document.getElementById("otp-input").value
 
     if (enteredOTP === generatedOTP) {
+      alertify.success("Email sent");
 
       const assignData = {
         stockId: Number(localStorage.getItem("stockId")),
@@ -96,7 +98,8 @@ document.querySelector(".getcode-btn").addEventListener("click", function () {
   document.getElementById("resend-code").addEventListener("click", function () {
     generatedOTP = generateOTP()
     console.log(`New Generated OTP: ${generatedOTP}`)
-    sendOTPEmail(recipientEmail, generatedOTP)
+    sendOTPEmail(recipientEmail, generatedOTP);
+    alertify.success("Email resend");
   })
 })
 
