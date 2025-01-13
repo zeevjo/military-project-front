@@ -60,14 +60,37 @@ const qrCodeSuccessCallback = async (decodedText, decodedResult) => {
         }
 
         if (data.currentStatus === "UnderRepair") {
-            setStatusBTN.innerHTML = `Set to Available`
-            setStatusBTN.setAttribute("key", "Available")
+            const btnSetAvailable = document.createElement('button');
+            btnSetAvailable.id = 'setStatusBTN';
+            btnSetAvailable.setAttribute('key', 'Available');
+            btnSetAvailable.textContent = 'Set to Available';
+            qrBTNS.appendChild(btnSetAvailable);
         }
 
-        if (data.currentStatus === "Assigned" || data.currentStatus === "Available") {
-            setStatusBTN.innerHTML = `Under Repair`
-            setStatusBTN.setAttribute("key", "UnderRepair")
+        if (data.currentStatus === "Assigned") {
+            // Create "Set to Available" button
+            const btnSetAvailable = document.createElement('button');
+            btnSetAvailable.id = 'setStatusBTN';
+            btnSetAvailable.setAttribute('key', 'Available');
+            btnSetAvailable.textContent = 'Set to Available';
+            qrBTNS.appendChild(btnSetAvailable);
+
+            // Create "Set to Under Repair" button
+            const btnSetUnderRepair = document.createElement('button');
+            btnSetUnderRepair.id = 'setStatusBTN';
+            btnSetUnderRepair.setAttribute('key', 'UnderRepair');
+            btnSetUnderRepair.textContent = 'Under Repair';
+            qrBTNS.appendChild(btnSetUnderRepair);
         }
+
+        if (data.currentStatus === "Available") {
+            const btnSetUnderRepair = document.createElement('button');
+            btnSetUnderRepair.id = 'setStatusBTN';
+            btnSetUnderRepair.setAttribute('key', 'UnderRepair');
+            btnSetUnderRepair.textContent = 'Under Repair';
+            qrBTNS.appendChild(btnSetUnderRepair);
+        }
+
 
     } catch (error) {
         errorAssign.style.display = 'block'
@@ -205,9 +228,12 @@ assignSoldier.addEventListener('click', function () {
     })
 })
 
-setStatusBTN.addEventListener("click", async function (event) {
+qrBTNS.addEventListener("click", async function (event) {
     const productStatus = event.target.getAttribute("key")
     console.log(productStatus)
+    if(productStatus === null){
+        return;
+    }
 
     Swal.mixin({
         confirmButtonColor: 'rgb(155 197 143)',

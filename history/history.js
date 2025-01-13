@@ -1,14 +1,13 @@
 let historyData;
 let currentPage = 1;
 const rowsPerPage = 15;
-
 let token;
 
-function verifyToken(){
+function verifyToken() {
     token = localStorage.getItem("token");
 
-    if(!token){
-        window.location.href = href="/login/login.html";
+    if (!token) {
+        window.location.href = "/login/login.html";
     }
 }
 
@@ -20,7 +19,7 @@ document.addEventListener('mouseover', function() {
     verifyToken();
 });
 
-async function getHistory(){
+async function getHistory() {
     try {
         const res = await fetch('http://localhost:8080/api/history', {
             method: "GET",
@@ -28,42 +27,42 @@ async function getHistory(){
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
-        })
+        });
 
         if (!res.ok) {
-            throw new Error(`Error: ${res.status} - ${res.statusText}`)
+            throw new Error(`Error: ${res.status} - ${res.statusText}`);
         }
 
-        historyData = await res.json()
-        console.log(historyData)
-        populateTable(historyData)
+        historyData = await res.json();
+        console.log(historyData);
+        populateTable(historyData);
     } catch (error) {
-        console.error("Failed to fetch or process data:", error)
-        populateTable([])
-        document.querySelector("#pagination").innerHTML = ""
+        console.error("Failed to fetch or process data:", error);
+        populateTable([]);
+        document.querySelector("#pagination").innerHTML = "";
     }
 }
 
 function populateTable(data) {
-    console.log(data)
-    const tableBody = document.querySelector("#inventoryTable tbody")
-    tableBody.innerHTML = ""
+    console.log(data);
+    const tableBody = document.querySelector("#inventoryTable tbody");
+    tableBody.innerHTML = "";
 
-    const startIndex = (currentPage - 1) * rowsPerPage
-    const paginatedData = data.slice(startIndex, startIndex + rowsPerPage)
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const paginatedData = data.slice(startIndex, startIndex + rowsPerPage);
 
     paginatedData.forEach(item => {
-        const row = document.createElement("tr")
+        const row = document.createElement("tr");
 
-        let statusColor = ''
-        const status = item.currentStatus.toLowerCase()
+        let statusColor = '';
+        const status = item.currentStatus.toLowerCase();
 
         if (status === "available") {
-            statusColor = '#609966'
+            statusColor = '#609966';
         } else if (status === "assigned") {
-            statusColor = '#F4CE14'
+            statusColor = '#F4CE14';
         } else if (status === "under maintenance") {
-            statusColor = '#E84545'
+            statusColor = '#E84545';
         }
 
         row.innerHTML = `
@@ -72,142 +71,142 @@ function populateTable(data) {
             <td>${item.soldierId === undefined ? "" : item.soldierId}</td>
             <td>${item.soldierName === undefined ? "" : item.soldierName}</td>
             <td>${item.modificationDate}</td>
-        `
+        `;
         tableBody.appendChild(row);
-    })
+    });
 
     updatePaginationButtons(data.length);
 }
 
 function applySearchAndFilters() {
-    const searchValue = document.getElementById("searchInput").value.toLowerCase()
-    const historyFilterValue = document.getElementById("historyFilter").value
+    const searchValue = document.getElementById("searchInput").value.toLowerCase();
+    const historyFilterValue = document.getElementById("historyFilter").value.toLowerCase();
 
     const filteredData = historyData.filter(item => {
-        const matchesSearch = item.productName.toLowerCase().includes(searchValue)
+        const matchesSearch = item.productName.toLowerCase().includes(searchValue);
 
-        let matchesStatus = true
-        if (historyFilterValue === "inStock") {
-            matchesStatus = item.status === "In Stock"
+        let matchesStatus = true;
+        if (historyFilterValue === "instock") {
+            matchesStatus = item.status.toLowerCase() === "in stock";
         } else if (historyFilterValue === "available") {
-            matchesStatus = item.status === "Available"
-        } else if (historyFilterValue === "underMaintenance") {
-            matchesStatus = item.status === "Under Maintenance"
+            matchesStatus = item.status.toLowerCase() === "available";
+        } else if (historyFilterValue === "undermaintenance") {
+            matchesStatus = item.status.toLowerCase() === "under maintenance";
         } else if (historyFilterValue === "assigned") {
-            matchesStatus = item.status === "Assigned"
+            matchesStatus = item.status.toLowerCase() === "assigned";
         }
 
-        return matchesSearch && matchesStatus
-    })
+        return matchesSearch && matchesStatus;
+    });
 
-    currentPage = 1
-    populateTable(filteredData)
+    currentPage = 1;
+    populateTable(filteredData);
 }
 
 function applySort() {
-    const sortValue = document.getElementById("sortSelect").value
+    const sortValue = document.getElementById("sortSelect").value;
 
-    let sortedData = [...historyData]
+    let sortedData = [...historyData];
 
     switch (sortValue) {
         case "productType":
-            sortedData.sort((a, b) => a.productName.localeCompare(b.productName))
-            break
+            sortedData.sort((a, b) => a.productName.localeCompare(b.productName));
+            break;
         case "status":
-            sortedData.sort((a, b) => a.status.localeCompare(b.status))
-            break
+            sortedData.sort((a, b) => a.currentStatus.localeCompare(b.currentStatus));
+            break;
         case "soldierId":
-            sortedData.sort((a, b) => a.soldierId - b.soldierId)
-            break
+            sortedData.sort((a, b) => a.soldierId - b.soldierId);
+            break;
         case "soldierFullName":
-            sortedData.sort((a, b) => a.soldierFullName.localeCompare(b.soldierFullName))
-            break
+            sortedData.sort((a, b) => a.soldierName.localeCompare(b.soldierName));
+            break;
         case "date":
-            sortedData.sort((a, b) => new Date(b.date) - new Date(a.date))
-            break
+            sortedData.sort((a, b) => new Date(b.modificationDate) - new Date(a.modificationDate));
+            break;
         default:
-            break
+            break;
     }
 
-    currentPage = 1
-    populateTable(sortedData)
+    currentPage = 1;
+    populateTable(sortedData);
 }
 
 function changePage(direction) {
     const filteredData = historyData.filter(item => {
-        const searchValue = document.getElementById("searchInput").value.toLowerCase()
-        const historyFilterValue = document.getElementById("historyFilter").value
+        const searchValue = document.getElementById("searchInput").value.toLowerCase();
+        const historyFilterValue = document.getElementById("historyFilter").value.toLowerCase();
 
-        const matchesSearch = item.productName.toLowerCase().includes(searchValue)
+        const matchesSearch = item.productName.toLowerCase().includes(searchValue);
 
-        let matchesStatus = true
-        if (historyFilterValue === "inStock") {
-            matchesStatus = item.status === "In Stock"
+        let matchesStatus = true;
+        if (historyFilterValue === "instock") {
+            matchesStatus = item.status.toLowerCase() === "in stock";
         } else if (historyFilterValue === "available") {
-            matchesStatus = item.status === "Available"
-        } else if (historyFilterValue === "underMaintenance") {
-            matchesStatus = item.status === "Under Maintenance"
+            matchesStatus = item.status.toLowerCase() === "available";
+        } else if (historyFilterValue === "undermaintenance") {
+            matchesStatus = item.status.toLowerCase() === "under maintenance";
         } else if (historyFilterValue === "assigned") {
-            matchesStatus = item.status === "Assigned"
+            matchesStatus = item.status.toLowerCase() === "assigned";
         }
 
-        return matchesSearch && matchesStatus
-    })
+        return matchesSearch && matchesStatus;
+    });
 
     if (direction === 'next') {
-        currentPage++
+        currentPage++;
     } else if (direction === 'prev') {
-        currentPage--
+        currentPage--;
     }
 
-    if (currentPage < 1) currentPage = 1
-    if (currentPage > Math.ceil(filteredData.length / rowsPerPage)) currentPage = Math.ceil(filteredData.length / rowsPerPage)
+    if (currentPage < 1) currentPage = 1;
+    if (currentPage > Math.ceil(filteredData.length / rowsPerPage)) currentPage = Math.ceil(filteredData.length / rowsPerPage);
 
-    populateTable(filteredData)
+    populateTable(filteredData);
 }
 
 function updatePaginationButtons(totalRows) {
-    const totalPages = Math.ceil(totalRows / rowsPerPage)
+    const totalPages = Math.ceil(totalRows / rowsPerPage);
 
-    document.getElementById("prevPage").disabled = currentPage === 1
-    document.getElementById("nextPage").disabled = currentPage === totalPages
+    document.getElementById("prevPage").disabled = currentPage === 1;
+    document.getElementById("nextPage").disabled = currentPage === totalPages;
 }
 
 function resetFilters() {
-    document.getElementById("searchInput").value = ""
-    document.getElementById("historyFilter").value = ""
-    document.getElementById("sortSelect").value = ""
-    currentPage = 1
-    populateTable(historyData)
+    document.getElementById("searchInput").value = "";
+    document.getElementById("historyFilter").value = "";
+    document.getElementById("sortSelect").value = "";
+    currentPage = 1;
+    populateTable(historyData);
 }
 
 function exportTableToCSV() {
-    const table = document.getElementById("inventoryTable")
-    const rows = table.querySelectorAll("tr")
+    const table = document.getElementById("inventoryTable");
+    const rows = table.querySelectorAll("tr");
 
-    let csvContent = "Product Type,Status,Soldier ID,Soldier Full Name,Date\n"
+    let csvContent = "Product Type,Status,Soldier ID,Soldier Full Name,Date\n";
 
     rows.forEach((row, index) => {
-        const cols = row.querySelectorAll("td, th")
-        const rowArray = []
+        const cols = row.querySelectorAll("td, th");
+        const rowArray = [];
         cols.forEach(col => {
-            rowArray.push(col.textContent.trim())
-        })
+            rowArray.push(col.textContent.trim());
+        });
 
         if (rowArray.length > 0) {
-            csvContent += rowArray.join(",") + "\n"
+            csvContent += rowArray.join(",") + "\n";
         }
-    })
+    });
 
-    const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent)
-    const link = document.createElement("a")
-    link.setAttribute("href", encodedUri)
-    link.setAttribute("download", "history_report.csv")
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "history_report.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    getHistory()
-})
+    getHistory();
+});

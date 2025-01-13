@@ -65,8 +65,6 @@ document.querySelector(".getcode-btn").addEventListener("click", function () {
     const enteredOTP = document.getElementById("otp-input").value
 
     if (enteredOTP === generatedOTP) {
-      alertify.success("Email sent");
-
       const assignData = {
         stockId: Number(localStorage.getItem("stockId")),
         soldierId: Number(localStorage.getItem("soldierId")),
@@ -84,8 +82,13 @@ document.querySelector(".getcode-btn").addEventListener("click", function () {
         .then(response => response.json())
         .then(data => {
           console.log('Assignment successful:', data)
-          window.location.href = "../qr/qr.html"
-
+          Swal.fire({
+            title: "Successful",
+            text: "Soldier Assigned",
+            icon: "success"
+          }).then(() => {
+            window.location.href = "../qr/qr.html"
+          })
         })
         .catch(error => {
           console.error('Error:', error)
