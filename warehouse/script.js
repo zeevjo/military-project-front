@@ -1,18 +1,32 @@
 const rowsPerPage = 15
 let currentPage = 1
 
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("token")
 
-if(!token){
-    window.location.href = href="/login/login.html";
+if (!token) {
+    window.location.href = href = "/login/login.html"
 }
 
 async function applySearchAndFilters() {
+    const token = localStorage.getItem("token")
+
+    console.log('token', token)
+    if (!token) {
+        window.location.href = "/login/login.html"
+        return
+    }
+
     const searchInput = document.getElementById("searchInput").value.toLowerCase()
     const stockFilter = document.getElementById("stockFilter").value
 
     try {
-        const res = await fetch('http://localhost:8080/api/stock')
+        const res = await fetch('http://localhost:8080/api/stock', {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        })
 
         if (!res.ok) {
             throw new Error(`Error: ${res.status} - ${res.statusText}`)
@@ -143,32 +157,14 @@ function exportTableToCSV() {
 document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("token")
 
+    console.log('token', token)
+
     if (!token) {
-        window.location.href = "/login.html"
+        window.location.href = href = "/login/login.html"
         return
     }
 
-    try {
-        // Validate the token (optional, depending on your application logic)
-        const res = await fetch("http://localhost:8080/api/validate-token", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-            },
-        })
-
-        if (!res.ok) {
-            throw new Error("Invalid token")
-        }
-
-        // Token is valid; proceed to load the page
-        console.log("Token validated successfully.")
-        applySearchAndFilters()
-    } catch (error) {
-        console.error("Token validation failed:", error)
-        localStorage.removeItem("token")
-        window.location.href = "/login.html"
-    }
+    console.log("Token validated successfully.")
+    applySearchAndFilters()
 });
 
