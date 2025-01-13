@@ -134,6 +134,35 @@ function exportTableToCSV() {
     document.body.removeChild(link)
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    applySearchAndFilters()
-})
+document.addEventListener("DOMContentLoaded", async () => {
+    const token = localStorage.getItem("token")
+
+    if (!token) {
+        window.location.href = "/login.html"
+        return
+    }
+
+    try {
+        // Validate the token (optional, depending on your application logic)
+        const res = await fetch("http://localhost:8080/api/validate-token", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            },
+        })
+
+        if (!res.ok) {
+            throw new Error("Invalid token")
+        }
+
+        // Token is valid; proceed to load the page
+        console.log("Token validated successfully.")
+        applySearchAndFilters()
+    } catch (error) {
+        console.error("Token validation failed:", error)
+        localStorage.removeItem("token")
+        window.location.href = "/login.html"
+    }
+});
+
