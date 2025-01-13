@@ -3,12 +3,23 @@
   emailjs.init("t73-CEmjPINBtcZxm")
 })()
 
+let token;
 
-const token = localStorage.getItem("token")
+function verifyToken(){
+    token = localStorage.getItem("token");
 
-if (!token) {
-  window.location.href = href = "/login/login.html"
+    if(!token){
+        window.location.href = href="/login/login.html";
+    }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    verifyToken();
+});
+
+document.addEventListener('mouseover', function() {
+    verifyToken();
+});
 
 function generateOTP() {
   return Math.floor(1000 + Math.random() * 9000).toString()
@@ -46,9 +57,7 @@ document.querySelector(".getcode-btn").addEventListener("click", function () {
       )
   }
 
-
   sendOTPEmail(recipientEmail, generatedOTP)
-
 
   document.getElementById("otp-form").addEventListener("submit", function (event) {
     event.preventDefault()
@@ -80,7 +89,7 @@ document.querySelector(".getcode-btn").addEventListener("click", function () {
           console.error('Error:', error)
         })
     } else {
-      alert("Incorrect code. Please try again.")
+      alertify.error("Incorrect code");
     }
   })
 
