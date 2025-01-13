@@ -1,3 +1,4 @@
+/* Color Variables */
 :root {
   --gray-100: #e3e5e7;
   --gray-200: #c1c3c5;
@@ -6,11 +7,13 @@
   --gray-500: #4b4e54;
 }
 
+/* Global Styles */
 body {
   margin: 0;
   font-family: "Open Sans", sans-serif;
 }
 
+/* Footer Styles */
 footer {
   background-color: var(--gray-100);
   color: var(--gray-500);
@@ -19,7 +22,6 @@ footer {
   position: fixed;
   bottom: 0;
   width: 100%;
-  font-family: "Open Sans", sans-serif;
 }
 
 .footer-content {
@@ -43,6 +45,7 @@ footer p {
   transition: color 0.3s;
 }
 
+/* Menu Styles */
 .menu {
   margin-left: 40rem;
 }
@@ -74,9 +77,9 @@ footer p {
   color: #ffffff;
 }
 
+/* Header Styles */
 header {
   background-color: var(--gray-100);
-  font-family: "Open Sans", sans-serif;
 }
 
 nav {
@@ -85,15 +88,16 @@ nav {
   justify-content: space-between;
   padding: 0 1rem;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 nav .logo-icon img {
-  width: 15rem;
+  width: clamp(8rem, 30vw, 15rem);
   transition: transform 0.3s ease;
 }
 
 nav .profile-icon img {
-  width: 35px;
+  width: clamp(30px, 5vw, 35px);
   transition: transform 0.3s ease;
 }
 
@@ -103,6 +107,7 @@ nav .profile-icon img:hover {
   cursor: pointer;
 }
 
+/* QR Code Scanner Styles */
 .qr-container {
   max-width: 500px;
   margin: 5rem auto;
@@ -110,10 +115,6 @@ nav .profile-icon img:hover {
   background: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-}
-
-.qr-camera {
-  margin-bottom: 20px;
 }
 
 .qr-header {
@@ -155,6 +156,7 @@ nav .profile-icon img:hover {
   margin-bottom: 5px;
 }
 
+/* Assign Soldier Section */
 #assigningDiv {
   margin-top: 20px;
   display: flex;
@@ -163,7 +165,9 @@ nav .profile-icon img:hover {
   display: none;
 }
 
-#tryAgainBTN {
+.qrBTNS {
+  display: flex;
+  justify-content: space-between;
   display: none;
 }
 
@@ -202,4 +206,28 @@ button#assignsoldier:hover {
   font-size: 14px;
   margin-top: 10px;
   display: none; /* Hidden by default */
+}
+
+/* Media Queries for Responsiveness */
+@media screen and (max-width: 480px) {
+  nav {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .menu {
+    order: 3;
+    margin: auto;
+  }
+
+  .menu ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .menu ul li {
+    width: 100%;
+    text-align: center;
+  }
 }

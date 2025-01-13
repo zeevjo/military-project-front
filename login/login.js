@@ -38,20 +38,20 @@ loginBTN.addEventListener("click", async function(event) {
             body: JSON.stringify(userData)
         });
         const data = await response.json();  // מחכים לקבל את התגובה מהשרת
-
+        console.log(data);
         if (data.success) {
             localStorage.setItem("username", userData.username);
             localStorage.setItem("token", data.token);
 
-            errorMessage.style.display = 'block';
-            errorMessage.innerHTML = data.message;
+            successMessage.style.display = 'block';
+            successMessage.innerHTML = data.message;
 
             setTimeout(() => {
                 window.location.href = "/homepage/index.html";
             }, 2000);
         } else {
             errorMessage.style.display = 'block';
-            errorMessage.innerHTML = data.message;
+            errorMessage.innerHTML = data.error;
         }
     } catch (error) {
         errorMessage.style.display = 'block';
