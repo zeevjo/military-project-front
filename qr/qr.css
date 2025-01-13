@@ -1,4 +1,3 @@
-/* Color Variables */
 :root {
   --gray-100: #e3e5e7;
   --gray-200: #c1c3c5;
@@ -7,21 +6,42 @@
   --gray-500: #4b4e54;
 }
 
-/* Global Styles */
+html {
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: "Open Sans", sans-serif;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Footer Styles */
+.container {
+  height: auto;
+  overflow-y: auto; /* Enable vertical scrolling */
+  margin: 20px auto;
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative; /* To position pagination */
+  max-width: 800px;
+}
+
 footer {
   background-color: var(--gray-100);
   color: var(--gray-500);
   padding: 2rem 0;
   text-align: center;
-  position: fixed;
-  bottom: 0;
   width: 100%;
+  font-family: "Open Sans", sans-serif;
+  margin-top: auto; /* Push footer to bottom */
+}
+
+.wrapper {
+  flex: 1;
 }
 
 .footer-content {
@@ -45,9 +65,11 @@ footer p {
   transition: color 0.3s;
 }
 
-/* Menu Styles */
 .menu {
-  margin-left: 40rem;
+  margin-left: auto; /* Align menu properly */
+  padding: 0 1rem; /* Add padding for consistency */
+  max-width: 100%; /* Ensure menu fits the screen */
+  box-sizing: border-box; /* Include padding in the width calculation */
 }
 
 .menu ul {
@@ -70,6 +92,9 @@ footer p {
   padding: 8px 12px;
   transition: color 0.3s, background-color 0.3s;
   border-radius: 4px;
+  max-width: 100%; /* Ensure links don't exceed the container */
+  overflow-wrap: break-word; /* Break long words to fit the container */
+  white-space: normal; /* Allow wrapping instead of a single line */
 }
 
 .menu ul li a:hover {
@@ -77,9 +102,9 @@ footer p {
   color: #ffffff;
 }
 
-/* Header Styles */
 header {
   background-color: var(--gray-100);
+  font-family: "Open Sans", sans-serif;
 }
 
 nav {
@@ -107,14 +132,15 @@ nav .profile-icon img:hover {
   cursor: pointer;
 }
 
-/* QR Code Scanner Styles */
 .qr-container {
   max-width: 500px;
-  margin: 5rem auto;
-  padding: 20px;
+  width: 90%; /* Set relative width */
+  margin: 2rem auto;
+  padding: 15px;
   background: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
+  box-sizing: border-box;
 }
 
 .qr-header {
@@ -127,9 +153,19 @@ nav .profile-icon img:hover {
 .qr-reader {
   display: flex;
   justify-content: center;
+  align-items: center;
   border: 2px dashed var(--gray-500);
-  padding: 20px;
+  padding: 10px;
   border-radius: 10px;
+  max-width: 100%;
+  overflow: hidden; /* Prevent overflow */
+}
+
+.qr-reader video {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  object-fit: contain;
 }
 
 .qr-results {
@@ -184,7 +220,7 @@ input[type="text"] {
   border-radius: 5px;
 }
 
-.qrBTNS button  {
+.qrBTNS button {
   padding: 10px 20px;
   background-color: var(--gray-400);
   color: white;
@@ -196,7 +232,7 @@ input[type="text"] {
   transition: 0.2s ease-in;
 }
 
-#assignsoldier{
+#assignsoldier {
   display: none;
 }
 
@@ -211,8 +247,8 @@ button#assignsoldier:hover {
   display: none; /* Hidden by default */
 }
 
-.custom-cancel-button{
-  color:#2d6623;
+.custom-cancel-button {
+  color: #2d6623;
   background-color: palevioletred;
 }
 
@@ -226,6 +262,7 @@ button#assignsoldier:hover {
   .menu {
     order: 3;
     margin: auto;
+    padding: 10px 0;
   }
 
   .menu ul {
@@ -237,5 +274,49 @@ button#assignsoldier:hover {
   .menu ul li {
     width: 100%;
     text-align: center;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .qr-container {
+    margin: 1rem auto;
+    padding: 10px;
+  }
+
+  /* Adjust QR shaded region for mobile */
+  #qr-shaded-region {
+    border-width: 60px 80px !important;
+  }
+
+  .qrBTNS {
+    flex-direction: column; /* Stack buttons on mobile */
+    gap: 8px;
+  }
+
+  .qrBTNS button {
+    width: 100%; /* Full width buttons on mobile */
+  }
+
+  /* Remove fixed height constraints on mobile */
+  .qr-reader > div {
+    height: auto !important;
+    min-height: 200px;
+  }
+}
+
+/* Larger phones and small tablets */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  .qr-container {
+    width: 95%;
+    margin: 1.5rem auto;
+  }
+
+  #qr-shaded-region {
+    border-width: 80px 100px !important;
+  }
+
+  .qrBTNS {
+    justify-content: center;
+    gap: 15px;
   }
 }

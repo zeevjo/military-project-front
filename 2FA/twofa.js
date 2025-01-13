@@ -26,11 +26,11 @@ function generateOTP() {
 }
 
 document.querySelector(".getcode-btn").addEventListener("click", function () {
-  const recipientEmail = localStorage.getItem('username');
+  const recipientEmail = localStorage.getItem('username')
   if (!recipientEmail) {
-    alert("No email found. Please log in first.");
-    window.location.href = "../login/login.html";
-    return;
+    alert("No email found. Please log in first.")
+    window.location.href = "../login/login.html"
+    return
   }
   let generatedOTP = generateOTP()
   console.log(`Generated OTP: ${generatedOTP}`)
@@ -87,7 +87,7 @@ document.querySelector(".getcode-btn").addEventListener("click", function () {
         })
         .catch(error => {
           console.error('Error:', error)
-        });
+        })
     } else {
       alertify.error("Incorrect code");
     }
