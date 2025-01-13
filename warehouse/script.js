@@ -208,7 +208,7 @@ function populateDetailsTable(data) {
     const tableBody = document.querySelector("#inventoryTable tbody")
     tableBody.innerHTML = ""
 
-    if (data.length === 0) {
+    if (!data || data.length === 0) {
         tableBody.innerHTML = `<tr><td colspan="4">No data available</td></tr>`
         return
     }
@@ -217,19 +217,19 @@ function populateDetailsTable(data) {
         const row = document.createElement("tr")
 
         let statusColor = ''
-        if (item.currentStatus.toLowerCase() === "available") {
+        if (item.currentStatus?.toLowerCase() === "available") {
             statusColor = '#609966'
-        } else if (item.currentStatus.toLowerCase() === "assigned") {
+        } else if (item.currentStatus?.toLowerCase() === "assigned") {
             statusColor = '#F4CE14'
-        } else if (item.currentStatus.toLowerCase() === "underrepair") {
+        } else if (item.currentStatus?.toLowerCase() === "underrepair") {
             statusColor = '#E84545'
         }
 
         row.innerHTML = `
-            <td>${item.productName}</td>
-            <td style="color:${statusColor};">${item.currentStatus}</td>
-            <td>${item.lastModified}</td>
-            <td>${item.modifiedBySoldier}</td>
+            <td>${item.productName ?? ""}</td>
+            <td style="color:${statusColor};">${item.currentStatus ?? ""}</td>
+            <td>${item.lastModified ?? ""}</td>
+            <td>${item.modifiedBySoldier ?? ""}</td>
         `
         tableBody.appendChild(row)
     })
