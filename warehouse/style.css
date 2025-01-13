@@ -50,6 +50,7 @@ th {
   background-color: var(--gray-500);
   color: var(--gray-100);
   z-index: 1;
+  cursor: default;
 }
 
 tr:nth-child(even) {
@@ -58,6 +59,7 @@ tr:nth-child(even) {
 
 tr:hover {
   background-color: var(--gray-200);
+  cursor: pointer;
 }
 
 #pagination {

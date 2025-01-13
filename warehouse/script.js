@@ -1,5 +1,7 @@
+let currentProductData = null
 const rowsPerPage = 15
 let currentPage = 1
+let isViewingProductDetails = false
 
 const token = localStorage.getItem("token")
 
@@ -11,6 +13,7 @@ function addRowClickEvent() {
     const rows = document.querySelectorAll("#inventoryTable tbody tr")
     rows.forEach(row => {
         row.addEventListener("click", () => {
+            resetFilters()
             const productName = row.querySelector("td").textContent.trim()
             showProductDetails(productName)
         })
@@ -18,6 +21,8 @@ function addRowClickEvent() {
 }
 
 async function showProductDetails(productName) {
+    isViewingProductDetails = true
+
     try {
         const token = localStorage.getItem("token")
 
@@ -39,6 +44,7 @@ async function showProductDetails(productName) {
         }
 
         const productDetails = await res.json()
+        currentProductData = productDetails
 
         const tableHead = document.querySelector("#inventoryTable thead")
         tableHead.innerHTML = `
@@ -50,30 +56,14 @@ async function showProductDetails(productName) {
             </tr>
         `
 
-        const tableBody = document.querySelector("#inventoryTable tbody")
-        tableBody.innerHTML = ""
-
-        if (productDetails.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="4">No data available</td></tr>`
-            return
-        }
-
-        productDetails.forEach(item => {
-            const row = document.createElement("tr")
-            row.innerHTML = `
-                <td>${item.productName}</td>
-                <td>${item.currentStatus}</td>
-                <td>${item.lastModified}</td>
-                <td>${item.modifiedBySoldier}</td>
-            `
-            tableBody.appendChild(row)
-        })
+        currentPage = 1
+        populateDetailsTable(productDetails.slice(0, rowsPerPage))
+        updatePagination(productDetails)
 
         const backButton = document.createElement("button")
         backButton.textContent = "Back"
         backButton.id = "backButton"
         backButton.classList.add("btn", "btn-primary")
-
         backButton.insertAdjacentHTML('afterbegin', '<i class="fa-solid fa-arrow-left"></i> ')
 
         document.querySelector("#inventoryTable").insertAdjacentElement("beforebegin", backButton)
@@ -88,7 +78,9 @@ async function showProductDetails(productName) {
                     <th>Total Assigned</th>
                 </tr>
             `
-            applySearchAndFilters()
+            isViewingProductDetails = false
+            currentProductData = null
+            resetFilters()
             backButton.remove()
         })
 
@@ -102,7 +94,6 @@ async function showProductDetails(productName) {
 async function applySearchAndFilters() {
     const token = localStorage.getItem("token")
 
-    console.log('token', token)
     if (!token) {
         window.location.href = "/login/login.html"
         return
@@ -112,44 +103,76 @@ async function applySearchAndFilters() {
     const stockFilter = document.getElementById("stockFilter").value
 
     try {
-        const res = await fetch('http://localhost:8080/api/stock', {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-        })
+        if (isViewingProductDetails && currentProductData) {
+            let filteredData = currentProductData.filter(item => {
+                const matchesSearch =
+                    item.productName.toLowerCase().includes(searchInput) ||
+                    item.currentStatus.toLowerCase().includes(searchInput) ||
+                    item.lastModified.toLowerCase().includes(searchInput) ||
+                    item.modifiedBySoldier.toLowerCase().includes(searchInput)
 
-        if (!res.ok) {
-            throw new Error(`Error: ${res.status} - ${res.statusText}`)
-        }
+                if (!stockFilter) {
+                    return matchesSearch
+                }
 
-        const jsonData = await res.json()
+                switch (stockFilter) {
+                    case 'totalAvailable':
+                        return matchesSearch && item.currentStatus.toLowerCase() === 'available'
+                    case 'totalUnderMaintenance':
+                        return matchesSearch && item.currentStatus.toLowerCase() === 'under maintenance'
+                    case 'totalAssigned':
+                        return matchesSearch && item.currentStatus.toLowerCase() === 'assigned'
+                    default:
+                        return matchesSearch
+                }
+            })
 
-        let filteredData = jsonData.filter(item => {
-            const isMatchingName = item.productName.toLowerCase().includes(searchInput)
+            const start = (currentPage - 1) * rowsPerPage
+            const end = start + rowsPerPage
+            populateDetailsTable(filteredData.slice(start, end))
+            updatePagination(filteredData)
+        } else {
+            const res = await fetch('http://localhost:8080/api/stock', {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            })
 
-            if (!stockFilter) {
-                return isMatchingName
+            if (!res.ok) {
+                throw new Error(`Error: ${res.status} - ${res.statusText}`)
             }
 
-            return isMatchingName && item[stockFilter] > 0
-        })
+            const jsonData = await res.json()
+            let filteredData = jsonData.filter(item => {
+                const isMatchingName = item.productName.toLowerCase().includes(searchInput)
 
-        if (stockFilter && stockFilter !== "") {
-            filteredData.sort((a, b) => b[stockFilter] - a[stockFilter])
+                if (!stockFilter) {
+                    return isMatchingName
+                }
+
+                return isMatchingName && item[stockFilter] > 0
+            })
+
+            if (stockFilter && stockFilter !== "") {
+                filteredData.sort((a, b) => b[stockFilter] - a[stockFilter])
+            }
+
+            const start = (currentPage - 1) * rowsPerPage
+            const end = start + rowsPerPage
+            populateTable(filteredData.slice(start, end))
+            updatePagination(filteredData)
         }
-
-        const start = (currentPage - 1) * rowsPerPage
-        const end = start + rowsPerPage
-        populateTable(filteredData.slice(start, end))
-        updatePagination(filteredData)
     } catch (error) {
         console.error("Failed to fetch or process data:", error)
-        populateTable([])
+        const tableBody = document.querySelector("#inventoryTable tbody")
+        tableBody.innerHTML = `<tr><td colspan="5">Error fetching data</td></tr>`
         document.querySelector("#pagination").innerHTML = ""
     }
 }
+
+
 
 function resetFilters() {
     document.getElementById("searchInput").value = ''
@@ -182,6 +205,27 @@ function populateTable(data) {
     addRowClickEvent()
 }
 
+function populateDetailsTable(data) {
+    const tableBody = document.querySelector("#inventoryTable tbody")
+    tableBody.innerHTML = ""
+
+    if (data.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="4">No data available</td></tr>`
+        return
+    }
+
+    data.forEach(item => {
+        const row = document.createElement("tr")
+        row.innerHTML = `
+            <td>${item.productName}</td>
+            <td>${item.currentStatus}</td>
+            <td>${item.lastModified}</td>
+            <td>${item.modifiedBySoldier}</td>
+        `
+        tableBody.appendChild(row)
+    })
+}
+
 function updatePagination(filteredData) {
     const totalPages = Math.ceil(filteredData.length / rowsPerPage)
     const paginationContainer = document.querySelector("#pagination")
@@ -190,35 +234,36 @@ function updatePagination(filteredData) {
 
     paginationContainer.insertAdjacentHTML(
         "beforeend",
-        `<button id="prevButton" class="page-button ${currentPage === 1 ? "disabled" : ""}" onclick="changePage('prev')">Previous</button>`
+        `<button id="prevButton" class="page-button ${currentPage === 1 ? "disabled" : ""}" onclick="changePage('prev', filteredData)">Previous</button>`
     )
 
     for (let i = 1; i <= totalPages; i++) {
         paginationContainer.insertAdjacentHTML(
             "beforeend",
-            `<button class="page-button ${i === currentPage ? "active" : ""}" onclick="goToPage(${i})">${i}</button>`
+            `<button class="page-button ${i === currentPage ? "active" : ""}" onclick="goToPage(${i}, filteredData)">${i}</button>`
         )
     }
 
     paginationContainer.insertAdjacentHTML(
         "beforeend",
-        `<button id="nextButton" class="page-button ${currentPage === totalPages ? "disabled" : ""}" onclick="changePage('next')">Next</button>`
+        `<button id="nextButton" class="page-button ${currentPage === totalPages ? "disabled" : ""}" onclick="changePage('next', filteredData)">Next</button>`
     )
 }
-
-function changePage(direction) {
-    if (direction === "next" && currentPage * rowsPerPage < jsonData.length) {
+function changePage(direction, filteredData) {
+    if (direction === "next" && currentPage * rowsPerPage < filteredData.length) {
         currentPage++
     } else if (direction === "prev" && currentPage > 1) {
         currentPage--
     }
 
-    applySearchAndFilters()
+    populateTable(filteredData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage))
+    updatePagination(filteredData)
 }
 
-function goToPage(page) {
+function goToPage(page, filteredData) {
     currentPage = page
-    applySearchAndFilters()
+    populateTable(filteredData.slice((page - 1) * rowsPerPage, page * rowsPerPage))
+    updatePagination(filteredData)
 }
 
 function exportTableToCSV() {
