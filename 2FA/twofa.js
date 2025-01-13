@@ -15,6 +15,11 @@
 //   }
 // });
 
+const token = localStorage.getItem("token");
+
+if(!token){
+    // window.location.href = href="/login/login.html";
+}
 
 function generateOTP() {
   return Math.floor(1000 + Math.random() * 9000).toString()

@@ -43,8 +43,8 @@ loginBTN.addEventListener("click", async function(event) {
             localStorage.setItem("username", userData.username);
             localStorage.setItem("token", data.token);
 
-            errorMessage.style.display = 'block';
-            errorMessage.innerHTML = data.message;
+            successMessage.style.display = 'block';
+            successMessage.innerHTML = data.message;
 
             setTimeout(() => {
                 window.location.href = "/homepage/index.html";

@@ -1,6 +1,12 @@
 const rowsPerPage = 15
 let currentPage = 1
 
+const token = localStorage.getItem("token");
+
+if(!token){
+    // window.location.href = href="/login/login.html";
+}
+
 async function applySearchAndFilters() {
     const searchInput = document.getElementById("searchInput").value.toLowerCase()
     const stockFilter = document.getElementById("stockFilter").value

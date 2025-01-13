@@ -7,16 +7,23 @@ const assignedTo = document.getElementById('assignedTo')
 const assignSoldier = document.getElementById('assignsoldier')
 const soldierId = document.getElementById('soldierId')
 const assigningDiv = document.getElementById('assigningDiv')
+const qrBTNS = document.querySelector('.qrBTNS')
 const tryAgainBTN = document.getElementById('tryAgainBTN')
 const errorAssign = document.getElementById('errorAssign')
+const setStatusBTN = document.getElementById('setStatusBTN')
 const qrCamera = document.querySelector('.qr-camera')
 
 const qrCodeScanner = new Html5Qrcode("qr-reader")
 
-let stockId
 let isScanning = true
 let isAssgined = true
+let currentProduct;
 
+const token = localStorage.getItem("token");
+
+if(!token){
+    // window.location.href = href="/login/login.html";
+}
 
 const qrCodeSuccessCallback = (decodedText, decodedResult) => {
 
@@ -26,13 +33,13 @@ const qrCodeSuccessCallback = (decodedText, decodedResult) => {
     fetch(`http://localhost:8080/api/stock/item?id=${encodeURIComponent(decodedText)}`, {
         headers: {
             'Content-Type': 'application/json'
-        }
-
+        },
+        Authorization: `Bearer ${token}`
     })
         .then(response => response.json())
         .then(data => {
             console.log('got item data successful:', data)
-            stockId = data.stockId
+            currentProduct = data;
             productName.innerHTML = data.productName
             productDescription.innerHTML = data.productType
             productStatus.innerHTML = data.currentStatus
@@ -40,17 +47,27 @@ const qrCodeSuccessCallback = (decodedText, decodedResult) => {
                 assignedTo.innerHTML = data?.assignedTo
             }
             qrCamera.style.display = "none"
-            tryAgainBTN.style.display = "block"
-
-
+            qrBTNS.style.display = "flex"
+            console.log(data.currentStatus);
+            
             if (data.currentStatus === "Available") {
                 isAssgined = false
                 if (isAssgined === false) {
-                    console.log('qrCamera', qrCamera)
                     assigningDiv.style.display = "flex"
 
                 }
             }
+
+            if (data.currentStatus === "UnderRepair") {
+                setStatusBTN.innerHTML = `Set to Available`;
+                setStatusBTN.setAttribute("key", "Available");
+            }
+            
+            if (data.currentStatus === "Assigned" || data.currentStatus === "Available") {
+                setStatusBTN.innerHTML = `Mark as Under Repair`
+                setStatusBTN.setAttribute("key", "UnderRepair");
+            }
+            
 
         })
         .catch(error => {
@@ -124,7 +141,6 @@ tryAgainBTN.addEventListener('click', function () {
         return
     }
 
-    // Clear previous results and UI elements
     readerResults.innerText = ''
     productName.innerText = ''
     productDescription.innerText = ''
@@ -132,12 +148,10 @@ tryAgainBTN.addEventListener('click', function () {
     assignedTo.innerText = ''
     errorAssign.innerHTML = ''
     qrCamera.style.display = "block"
-    tryAgainBTN.style.display = "none"
+    qrBTNS.style.display = "none"
 
-    // Reset scanner state
     isScanning = true
 
-    // Restart the scanner
     qrCodeScanner
         .start(
             { facingMode: "environment" },
@@ -175,10 +189,39 @@ assignSoldier.addEventListener('click', function () {
         return
     }
 
-    localStorage.setItem('stockId', stockId)
+    // const assigneData = {
+    //     stockId: stockId,
+    //     soldierId: Number(soldierId.value),
+    //     assignmentDate: currentDate()
+    // }
+
+    localStorage.setItem('stockId', currentProduct.stockId)
     localStorage.setItem('soldierId', Number(soldierId.value))
     localStorage.setItem('assignmentDate', currentDate())
 
     window.location.href = "/2FA/twofa.html"
 
-})
+});
+
+setStatusBTN.addEventListener("click", async function(event){
+    const productStatus = event.target.getAttribute("key");
+
+    try {
+        const response = await fetch('http://localhost:8080/api/TEST', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            Authorization: `Bearer ${token}`,
+            body: JSON.stringify({
+                stockId: currentProduct.stockId,
+                status: productStatus,
+                currentDate: currentDate()
+            })
+        });
+        const data = await response.json();
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
