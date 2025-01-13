@@ -272,6 +272,8 @@ setStatusBTN.addEventListener("click", async function (event) {
                         title: "Status Updated",
                         text: `${data.message}`,
                         icon: "success"
+                    }).then(() => {
+                        window.location.reload()
                     })
 
                     qrCodeScanner.start(
