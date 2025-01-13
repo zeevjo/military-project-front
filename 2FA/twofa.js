@@ -3,22 +3,11 @@
   emailjs.init("t73-CEmjPINBtcZxm")
 })()
 
-// document.addEventListener("DOMContentLoaded", function () {
 
+const token = localStorage.getItem("token")
 
-//   // const userEmail = localStorage.getItem('username');
-
-//   if (!recipientEmail) {
-//     alert("No email found. Please log in first.");
-//     window.location.href = "login.html";
-//     return;
-//   }
-// });
-
-const token = localStorage.getItem("token");
-
-if(!token){
-    window.location.href = href="/login/login.html";
+if (!token) {
+  window.location.href = href = "/login/login.html"
 }
 
 function generateOTP() {
@@ -26,11 +15,11 @@ function generateOTP() {
 }
 
 document.querySelector(".getcode-btn").addEventListener("click", function () {
-  const recipientEmail = localStorage.getItem('username');
+  const recipientEmail = localStorage.getItem('username')
   if (!recipientEmail) {
-    alert("No email found. Please log in first.");
-    window.location.href = "../login/login.html";
-    return;
+    alert("No email found. Please log in first.")
+    window.location.href = "../login/login.html"
+    return
   }
   let generatedOTP = generateOTP()
   console.log(`Generated OTP: ${generatedOTP}`)
@@ -89,7 +78,7 @@ document.querySelector(".getcode-btn").addEventListener("click", function () {
         })
         .catch(error => {
           console.error('Error:', error)
-        });
+        })
     } else {
       alert("Incorrect code. Please try again.")
     }
