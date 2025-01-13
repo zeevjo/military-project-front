@@ -1,50 +1,79 @@
 const rowsPerPage = 15
 let currentPage = 1
 
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("token")
 
-if(!token){
-    window.location.href = href="/login/login.html";
+if (!token) {
+    window.location.href = href = "/login/login.html"
 }
 
 async function applySearchAndFilters() {
+    const token = localStorage.getItem("token")
+
+    console.log('token', token)
+    if (!token) {
+        window.location.href = "/login/login.html"
+        return
+    }
+
     const searchInput = document.getElementById("searchInput").value.toLowerCase()
     const stockFilter = document.getElementById("stockFilter").value
 
-    const res = await fetch('http://localhost:8080/api/stock')
-    const jsonData = await res.json()
+    try {
+        const res = await fetch('http://localhost:8080/api/stock', {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        })
 
-    let filteredData = jsonData.filter(item => {
-        const isMatchingName = item.productName.toLowerCase().includes(searchInput)
-
-        if (!stockFilter) {
-            return isMatchingName
+        if (!res.ok) {
+            throw new Error(`Error: ${res.status} - ${res.statusText}`)
         }
 
-        return isMatchingName && item[stockFilter] > 0
-    })
+        const jsonData = await res.json()
 
-    if (stockFilter && stockFilter !== "") {
-        filteredData.sort((a, b) => b[stockFilter] - a[stockFilter])
+        let filteredData = jsonData.filter(item => {
+            const isMatchingName = item.productName.toLowerCase().includes(searchInput)
+
+            if (!stockFilter) {
+                return isMatchingName
+            }
+
+            return isMatchingName && item[stockFilter] > 0
+        })
+
+        if (stockFilter && stockFilter !== "") {
+            filteredData.sort((a, b) => b[stockFilter] - a[stockFilter])
+        }
+
+        const start = (currentPage - 1) * rowsPerPage
+        const end = start + rowsPerPage
+        populateTable(filteredData.slice(start, end))
+        updatePagination(filteredData)
+    } catch (error) {
+        console.error("Failed to fetch or process data:", error)
+        populateTable([])
+        document.querySelector("#pagination").innerHTML = ""
     }
-
-    const start = (currentPage - 1) * rowsPerPage
-    const end = start + rowsPerPage
-    populateTable(filteredData.slice(start, end))
-    updatePagination(filteredData)
 }
 
 function resetFilters() {
     document.getElementById("searchInput").value = ''
     document.getElementById("stockFilter").value = ''
-    currentPage = 1  // Reset to first page when clearing filters
+    currentPage = 1
     applySearchAndFilters()
 }
 
-
 function populateTable(data) {
     const tableBody = document.querySelector("#inventoryTable tbody")
-    tableBody.innerHTML = "" // Clear previous rows
+    tableBody.innerHTML = ""
+
+    if (data.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="5">No data available</td></tr>`
+        return
+    }
 
     data.forEach(item => {
         const row = document.createElement("tr")
@@ -102,7 +131,7 @@ function exportTableToCSV() {
     const table = document.getElementById("inventoryTable")
     const rows = table.querySelectorAll("tr")
 
-    let csvContent = "Product Name,Total in Stock,Total Available,Total Under Maintenance,Total Assigned\n"  // Headers
+    let csvContent = "Product Name,Total in Stock,Total Available,Total Under Maintenance,Total Assigned\n"
 
     rows.forEach((row, index) => {
         const cols = row.querySelectorAll("td, th")
@@ -116,7 +145,6 @@ function exportTableToCSV() {
         }
     })
 
-    // Create a link to trigger the download
     const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent)
     const link = document.createElement("a")
     link.setAttribute("href", encodedUri)
@@ -126,6 +154,17 @@ function exportTableToCSV() {
     document.body.removeChild(link)
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    const token = localStorage.getItem("token")
+
+    console.log('token', token)
+
+    if (!token) {
+        window.location.href = href = "/login/login.html"
+        return
+    }
+
+    console.log("Token validated successfully.")
     applySearchAndFilters()
-})
+});
+
