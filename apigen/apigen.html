@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="apigen.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>API KEY Generator</title>
+</head>
+
+<body>
+    <div class="main-container">
+        <h1 class="apigen-title">API KEY GENERATOR</h1>
+        <p class="apigen-brief">
+            This API key will provide developing access to the military management system.
+        </p>
+
+        <form id="api-form" class="api-form">
+            <div class="key-container">
+                <input type="password" id="api-output" class="api-input" placeholder="Generate a new API key ..." />
+                <button type="button" id="copyBtn" class="fa fa-clipboard" style="display: none;"></button>
+                <button type="button" id="toggleView" class="fa fa-eye"></button>
+            </div>
+            <button class="getkey-btn">Generate API Key</button>
+        </form>
+    </div>
+    <script src="apigen.js"></script>
+</body>
+
+</html>
