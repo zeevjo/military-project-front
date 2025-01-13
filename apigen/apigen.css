@@ -128,8 +128,3 @@ body {
     box-shadow: 0 2px #4b4e54;
 }
 
-/* Add this new CSS for the "copied" state */
-.copied {
-    color: #28a745; /* Green color for checkmark */
-    font-size: 20px;
-}

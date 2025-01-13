@@ -34,7 +34,7 @@ document.getElementById('copyBtn').addEventListener('click', function () {
             copyBtn.classList.remove('fa-clipboard');
             copyBtn.classList.add('fa-check');
             copyBtn.classList.add('copied');
-            alertify.success('Copied!');
+            
 
             // Optionally, reset the icon back after a short delay
             setTimeout(function () {
