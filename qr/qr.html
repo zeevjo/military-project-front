@@ -32,9 +32,6 @@
         <h1 class="qr-header">Scan QR Code</h1>
         <div class="qr-reader" id="qr-reader"></div>
       </div>
-      <div>
-        <div class="qr-results" id="qr-reader-results"></div>
-      </div>
       <div class="qr-product-data" id="productData">
         <span id="productName"></span>
         <span id="productDescription"></span>
@@ -50,13 +47,13 @@
           placeholder="Enter soldier personal number"
           required
         />
-        <button type="button" id="assignsoldier">Assign</button>
-        <div id="errorAssign"></div>
       </div>
       <div class="qrBTNS">
         <button id="tryAgainBTN">Scan Again</button>
+        <button type="button" id="assignsoldier">Assign</button>
         <button id="setStatusBTN"></button>
       </div>
+      <div id="errorAssign"></div>
     </div>
 
     <script src="https://unpkg.com/html5-qrcode@2.0.1/minified/html5-qrcode.min.js"></script>
