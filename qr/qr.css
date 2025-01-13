@@ -196,6 +196,10 @@ input[type="text"] {
   transition: 0.2s ease-in;
 }
 
+#assignsoldier{
+  display: none;
+}
+
 button#assignsoldier:hover {
   background-color: var(--gray-500);
 }
@@ -205,6 +209,11 @@ button#assignsoldier:hover {
   font-size: 14px;
   margin-top: 10px;
   display: none; /* Hidden by default */
+}
+
+.custom-cancel-button{
+  color:#2d6623;
+  background-color: palevioletred;
 }
 
 /* Media Queries for Responsiveness */

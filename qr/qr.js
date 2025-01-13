@@ -5,7 +5,6 @@ const productStatus = document.getElementById('productStatus')
 const assignedTo = document.getElementById('assignedTo')
 const assignSoldier = document.getElementById('assignsoldier')
 const soldierId = document.getElementById('soldierId')
-const assigningDiv = document.getElementById('assigningDiv')
 const qrBTNS = document.querySelector('.qrBTNS')
 const tryAgainBTN = document.getElementById('tryAgainBTN')
 const errorAssign = document.getElementById('errorAssign')
@@ -15,7 +14,6 @@ const qrCamera = document.querySelector('.qr-camera')
 const qrCodeScanner = new Html5Qrcode("qr-reader")
 
 let isScanning = true
-let isAssgined = true
 let currentProduct;
 
 const token = localStorage.getItem("token");
@@ -58,10 +56,7 @@ const qrCodeSuccessCallback = async (decodedText, decodedResult) => {
         console.log(data.currentStatus);
 
         if (data.currentStatus === "Available") {
-            isAssgined = false;
-            if (!isAssgined) {
-                assigningDiv.style.display = "flex";
-            }
+            assignSoldier.style.display = "block";
         }
 
         if (data.currentStatus === "UnderRepair") {
@@ -145,8 +140,6 @@ tryAgainBTN.addEventListener('click', function () {
         console.log("Scanner is already running. Cannot start again.")
         return
     }
-
-    assigningDiv.style.display = "none";
     
     productName.innerText = ''
     productDescription.innerText = ''
@@ -188,40 +181,104 @@ function stopScanning() {
 }
 
 assignSoldier.addEventListener('click', function () {
-    const regex = /^\d+$/
-    errorAssign.innerHTML = ""
-    if (!regex.test(soldierId.value)) {
-        errorAssign.innerHTML = "Only digits please"
-        return
-    }
-
-    localStorage.setItem('stockId', currentProduct.stockId)
-    localStorage.setItem('soldierId', Number(soldierId.value))
-    localStorage.setItem('assignmentDate', currentDate())
-
-    window.location.href = "/2FA/twofa.html"
-
+    Swal.mixin({
+        confirmButtonColor: 'rgb(155 197 143)', 
+        cancelButtonColor: 'rgb(201 99 122)', 
+    }).fire({
+        title: 'Enter Personal Number',
+        input: 'text', 
+        inputAttributes: {
+            maxlength: 10, 
+            placeholder: 'Enter only digits'
+        },
+        confirmButtonText: 'Submit',
+        showCancelButton: true,
+        cancelButtonText: 'Cancel',
+        preConfirm: (value) => {
+            if (!/^\d+$/.test(value)) {
+                Swal.showValidationMessage('Please enter digits only!');
+                return false;
+            }
+            if (!value) {
+                Swal.showValidationMessage('Please enter digits!');
+                return false;
+            }
+            return value;
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            localStorage.setItem('stockId', currentProduct.stockId)
+            localStorage.setItem('soldierId', Number(result.value))
+            localStorage.setItem('assignmentDate', currentDate())
+        
+            Swal.fire('Entered value:', result.value, 'success');
+            
+            window.location.href = "/2FA/twofa.html";
+        }
+    });
 });
 
 setStatusBTN.addEventListener("click", async function(event){
     const productStatus = event.target.getAttribute("key");
+    console.log(productStatus);
 
-    try {
-        const response = await fetch('http://localhost:8080/api/TEST', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            Authorization: `Bearer ${token}`,
-            body: JSON.stringify({
-                stockId: currentProduct.stockId,
-                status: productStatus,
-                currentDate: currentDate()
-            })
-        });
-        const data = await response.json();
+    Swal.mixin({
+        confirmButtonColor: 'rgb(155 197 143)', 
+        cancelButtonColor: 'rgb(201 99 122)', 
+    }).fire({
+        title: 'Enter Personal Number',
+        input: 'text', 
+        inputAttributes: {
+            placeholder: 'Enter only digits'
+        },
+        confirmButtonText: 'Submit',
+        showCancelButton: true,
+        cancelButtonText: 'Cancel',
+        customClass: {
+            confirmButton: 'custom-confirm-button',
+            cancelButton: 'custom-cancel-button'
+        },
+        preConfirm: (value) => {
+            if (!/^\d+$/.test(value)) {
+                Swal.showValidationMessage('Please enter digits only!');
+                return false;
+            }
+            return value;
+        }
+    }).then(async (result) => {
+        let status;
 
-    } catch (error) {
-        console.error('Error:', error);
-    }
+        if(productStatus === "Avaiable"){
+            status = 1;
+        }else if(productStatus === "UnderRepair"){
+            status = 3;
+        }else{
+            status = 2;
+        }
+
+        if(result.isConfirmed){
+            try {
+                const response = await fetch('http://localhost:8080/api/stock/status', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        soldierId: result.value,
+                        stockId: currentProduct.stockId,
+                        newStatus: productStatus
+                    })
+                });
+    
+                const data = await response.json();
+                Swal.fire('Entered v1alue:', result.value, 'success');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                Swal.fire('Something went wrong', 'please try again later', 'error');
+            }
+        }
+
+    });
 });
