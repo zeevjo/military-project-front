@@ -38,7 +38,7 @@ loginBTN.addEventListener("click", async function(event) {
             body: JSON.stringify(userData)
         });
         const data = await response.json();  // מחכים לקבל את התגובה מהשרת
-
+        console.log(data);
         if (data.success) {
             localStorage.setItem("username", userData.username);
             localStorage.setItem("token", data.token);
@@ -51,7 +51,7 @@ loginBTN.addEventListener("click", async function(event) {
             }, 2000);
         } else {
             errorMessage.style.display = 'block';
-            errorMessage.innerHTML = data.message;
+            errorMessage.innerHTML = data.error;
         }
     } catch (error) {
         errorMessage.style.display = 'block';

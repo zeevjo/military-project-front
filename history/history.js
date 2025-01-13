@@ -140,7 +140,7 @@ const rowsPerPage = 15  // Number of rows per page
 const token = localStorage.getItem("token");
 
 if(!token){
-    // window.location.href = href="/login/login.html";
+    window.location.href = href="/login/login.html";
 }
 
 function populateTable(data) {
