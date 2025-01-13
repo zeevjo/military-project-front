@@ -5,9 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>סורק QR</title>
     <link rel="stylesheet" href="qr.css" />
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.29/dist/sweetalert2.min.css" rel="stylesheet">
+    <script
+      src="https://kit.fontawesome.com/572b007657.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.29/dist/sweetalert2.min.css"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.29/dist/sweetalert2.min.js"></script>
-
   </head>
   <body>
     <header>
@@ -29,25 +35,36 @@
         </div>
       </nav>
     </header>
-    <div class="qr-container">
-      <div class="qr-camera">
-        <h1 class="qr-header">Scan QR Code</h1>
-        <div class="qr-reader" id="qr-reader"></div>
+    <div class="wraper">
+      <div class="qr-container container">
+        <div class="qr-camera">
+          <h1 class="qr-header">Scan QR Code</h1>
+          <div class="qr-reader" id="qr-reader"></div>
+        </div>
+        <div class="qr-product-data" id="productData">
+          <span id="productName"></span>
+          <span id="productDescription"></span>
+          <span id="productStatus"></span>
+          <span id="assignedTo"></span>
+        </div>
+        <div class="qrBTNS">
+          <button id="tryAgainBTN">Scan Again</button>
+          <button type="button" id="assignsoldier">Assign</button>
+          <button id="setStatusBTN"></button>
+        </div>
+        <div id="errorAssign"></div>
       </div>
-      <div class="qr-product-data" id="productData">
-        <span id="productName"></span>
-        <span id="productDescription"></span>
-        <span id="productStatus"></span>
-        <span id="assignedTo"></span>
-      </div>
-      <div class="qrBTNS">
-        <button id="tryAgainBTN">Scan Again</button>
-        <button type="button" id="assignsoldier">Assign</button>
-        <button id="setStatusBTN"></button>
-      </div>
-      <div id="errorAssign"></div>
     </div>
-
+    <footer>
+      <div class="footer-content">
+        <p>&copy; 2023 Military Equipment Management. All rights reserved.</p>
+        <div class="social-media">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </footer>
     <script src="https://unpkg.com/html5-qrcode@2.0.1/minified/html5-qrcode.min.js"></script>
     <script src="qr.js"></script>
   </body>
