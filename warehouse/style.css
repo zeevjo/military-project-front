@@ -178,7 +178,6 @@ nav {
 }
 
 nav .logo-icon img {
-  /* width: 15rem; */
   width: clamp(8rem, 30vw, 15rem);
   transition: transform 0.3s ease;
 }
@@ -211,7 +210,25 @@ nav .profile-icon img:hover {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  width: 100%; /* Ensures it stretches to full width of the container */
+  width: 100%;
+}
+
+#backButton {
+  position: absolute;
+  top: 25px;
+  right: 10px;
+  background-color: var(--gray-100);
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--gray-500);
+  transition: background-color 0.3s;
+}
+
+#backButton:hover {
+  background-color: var(--gray-200);
 }
 
 #searchInput {

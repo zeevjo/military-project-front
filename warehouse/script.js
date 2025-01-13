@@ -7,14 +7,6 @@ if (!token) {
     window.location.href = href = "/login/login.html"
 }
 
-const mockData = [
-    { productName: "Carbon Fiber Rope", currentStatus: "Available", lastModified: "2025-01-10", modifiedBySoldier: "John Doe" },
-    { productName: "Carbon Fiber Rope", currentStatus: "Assigned", lastModified: "2025-01-11", modifiedBySoldier: "Jane Smith" },
-    { productName: "Advanced Survival Kit", currentStatus: "Maintenance", lastModified: "2025-01-12", modifiedBySoldier: "Mike Lee" },
-    { productName: "Advanced Survival Kit", currentStatus: "Available", lastModified: "2025-01-13", modifiedBySoldier: "Anna Taylor" },
-]
-
-// Function to add click event listeners to table rows
 function addRowClickEvent() {
     const rows = document.querySelectorAll("#inventoryTable tbody tr")
     rows.forEach(row => {
@@ -25,41 +17,86 @@ function addRowClickEvent() {
     })
 }
 
-// Function to show product details for a specific productName
-function showProductDetails(productName) {
-    // Filter mock data by productName
-    const filteredData = mockData.filter(item => item.productName === productName)
+async function showProductDetails(productName) {
+    try {
+        const token = localStorage.getItem("token")
 
-    // Update table headers
-    const tableHead = document.querySelector("#inventoryTable thead")
-    tableHead.innerHTML = `
-        <tr>
-            <th>Product Name</th>
-            <th>Current Status</th>
-            <th>Last Modified</th>
-            <th>Modified By Soldier</th>
-        </tr>
-    `
+        if (!token) {
+            window.location.href = "/login/login.html"
+            return
+        }
 
-    // Populate table with filtered data
-    const tableBody = document.querySelector("#inventoryTable tbody")
-    tableBody.innerHTML = "" // Clear existing rows
+        const res = await fetch(`http://localhost:8080/api/stock/item/table?productName=${encodeURIComponent(productName)}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        })
 
-    if (filteredData.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="4">No data available</td></tr>`
-        return
-    }
+        if (!res.ok) {
+            throw new Error(`Error: ${res.status} - ${res.statusText}`)
+        }
 
-    filteredData.forEach(item => {
-        const row = document.createElement("tr")
-        row.innerHTML = `
-            <td>${item.productName}</td>
-            <td>${item.currentStatus}</td>
-            <td>${item.lastModified}</td>
-            <td>${item.modifiedBySoldier}</td>
+        const productDetails = await res.json()
+
+        const tableHead = document.querySelector("#inventoryTable thead")
+        tableHead.innerHTML = `
+            <tr>
+                <th>Product Name</th>
+                <th>Current Status</th>
+                <th>Last Modified</th>
+                <th>Modified By Soldier</th>
+            </tr>
         `
-        tableBody.appendChild(row)
-    })
+
+        const tableBody = document.querySelector("#inventoryTable tbody")
+        tableBody.innerHTML = ""
+
+        if (productDetails.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="4">No data available</td></tr>`
+            return
+        }
+
+        productDetails.forEach(item => {
+            const row = document.createElement("tr")
+            row.innerHTML = `
+                <td>${item.productName}</td>
+                <td>${item.currentStatus}</td>
+                <td>${item.lastModified}</td>
+                <td>${item.modifiedBySoldier}</td>
+            `
+            tableBody.appendChild(row)
+        })
+
+        const backButton = document.createElement("button")
+        backButton.textContent = "Back"
+        backButton.id = "backButton"
+        backButton.classList.add("btn", "btn-primary")
+
+        backButton.insertAdjacentHTML('afterbegin', '<i class="fa-solid fa-arrow-left"></i> ')
+
+        document.querySelector("#inventoryTable").insertAdjacentElement("beforebegin", backButton)
+
+        backButton.addEventListener("click", () => {
+            document.querySelector("#inventoryTable thead").innerHTML = `
+                <tr>
+                    <th>Product Name</th>
+                    <th>Total in Stock</th>
+                    <th>Total Available</th>
+                    <th>Total Under Maintenance</th>
+                    <th>Total Assigned</th>
+                </tr>
+            `
+            applySearchAndFilters()
+            backButton.remove()
+        })
+
+    } catch (error) {
+        console.error("Failed to fetch product details:", error)
+        const tableBody = document.querySelector("#inventoryTable tbody")
+        tableBody.innerHTML = `<tr><td colspan="4">Error fetching product details</td></tr>`
+    }
 }
 
 async function applySearchAndFilters() {
@@ -213,8 +250,6 @@ function exportTableToCSV() {
 
 document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("token")
-
-    console.log('token', token)
 
     if (!token) {
         window.location.href = href = "/login/login.html"
