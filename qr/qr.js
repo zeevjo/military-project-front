@@ -1,5 +1,4 @@
 const backHomeBTN = document.getElementById("backHomeBTN")
-const readerResults = document.getElementById('qr-reader-results')
 const productName = document.getElementById('productName')
 const productDescription = document.getElementById('productDescription')
 const productStatus = document.getElementById('productStatus')
@@ -25,57 +24,63 @@ if(!token){
     window.location.href = href="/login/login.html";
 }
 
-const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+const qrCodeSuccessCallback = async (decodedText, decodedResult) => {
+    try {
+        stopScanning();
 
-    readerResults.innerText = `הקוד שסרקת: ${decodedText}`
-    stopScanning()
+        const response = await fetch(`http://localhost:8080/api/stock/item?id=${encodeURIComponent(decodedText)}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+        });
 
-    fetch(`http://localhost:8080/api/stock/item?id=${encodeURIComponent(decodedText)}`, {
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        Authorization: `Bearer ${token}`
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log('got item data successful:', data)
-            currentProduct = data;
-            productName.innerHTML = data.productName
-            productDescription.innerHTML = data.productType
-            productStatus.innerHTML = data.currentStatus
-            if (data.assignedTo != undefined) {
-                assignedTo.innerHTML = data?.assignedTo
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log('got item data successful:', data);
+
+        currentProduct = data;
+
+        productName.innerHTML = data.productName;
+        productDescription.innerHTML = data.productType;
+        productStatus.innerHTML = data.currentStatus;
+
+        if (data.assignedTo !== undefined) {
+            assignedTo.innerHTML = data?.assignedTo;
+        }
+
+        qrCamera.style.display = "none";
+        qrBTNS.style.display = "flex";
+
+        console.log(data.currentStatus);
+
+        if (data.currentStatus === "Available") {
+            isAssgined = false;
+            if (!isAssgined) {
+                assigningDiv.style.display = "flex";
             }
-            qrCamera.style.display = "none"
-            qrBTNS.style.display = "flex"
-            console.log(data.currentStatus);
-            
-            if (data.currentStatus === "Available") {
-                isAssgined = false
-                if (isAssgined === false) {
-                    assigningDiv.style.display = "flex"
+        }
 
-                }
-            }
+        if (data.currentStatus === "UnderRepair") {
+            setStatusBTN.innerHTML = `Set to Available`;
+            setStatusBTN.setAttribute("key", "Available");
+        }
 
-            if (data.currentStatus === "UnderRepair") {
-                setStatusBTN.innerHTML = `Set to Available`;
-                setStatusBTN.setAttribute("key", "Available");
-            }
-            
-            if (data.currentStatus === "Assigned" || data.currentStatus === "Available") {
-                setStatusBTN.innerHTML = `Mark as Under Repair`
-                setStatusBTN.setAttribute("key", "UnderRepair");
-            }
-            
+        if (data.currentStatus === "Assigned" || data.currentStatus === "Available") {
+            setStatusBTN.innerHTML = `Under Repair`;
+            setStatusBTN.setAttribute("key", "UnderRepair");
+        }
 
-        })
-        .catch(error => {
-            errorAssign.style.display = 'block'
-            errorAssign.innerHTML = 'Error: ' + error.message
-            console.error('Error:', error)
-        })
-}
+    } catch (error) {
+        errorAssign.style.display = 'block';
+        errorAssign.innerHTML = 'Error: ' + error.message;
+        console.error('Error:', error);
+    }
+};
+
 
 qrCodeScanner.start(
     { facingMode: "environment" },
@@ -103,7 +108,7 @@ function currentDate() {
     const now = new Date()
 
     const year = now.getFullYear()
-    const month = String(now.getMonth() + 1).padStart(2, '0') // Ensure two digits
+    const month = String(now.getMonth() + 1).padStart(2, '0')
     const day = String(now.getDate()).padStart(2, '0')
     const hours = String(now.getHours()).padStart(2, '0')
     const minutes = String(now.getMinutes()).padStart(2, '0')
@@ -116,7 +121,7 @@ function currentDate() {
     const now = new Date()
 
     const year = now.getFullYear()
-    const month = now.getMonth() + 1 // Months are zero-indexed
+    const month = now.getMonth() + 1 
     const day = now.getDate()
     const hours = now.getHours()
     const minutes = now.getMinutes()
@@ -141,7 +146,8 @@ tryAgainBTN.addEventListener('click', function () {
         return
     }
 
-    readerResults.innerText = ''
+    assigningDiv.style.display = "none";
+    
     productName.innerText = ''
     productDescription.innerText = ''
     productStatus.innerText = ''
@@ -188,12 +194,6 @@ assignSoldier.addEventListener('click', function () {
         errorAssign.innerHTML = "Only digits please"
         return
     }
-
-    // const assigneData = {
-    //     stockId: stockId,
-    //     soldierId: Number(soldierId.value),
-    //     assignmentDate: currentDate()
-    // }
 
     localStorage.setItem('stockId', currentProduct.stockId)
     localStorage.setItem('soldierId', Number(soldierId.value))
