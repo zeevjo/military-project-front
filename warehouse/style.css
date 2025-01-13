@@ -64,9 +64,9 @@ tr:hover {
   display: flex;
   justify-content: center;
   gap: 5px;
-  position: sticky; /* Always visible at the bottom of the container */
+  position: sticky;
   bottom: 0;
-  background-color: white; /* Match container background */
+  background-color: white;
   padding: 10px 0;
   border-top: 1px solid var(--gray-300);
 }
