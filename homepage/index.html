@@ -56,11 +56,23 @@
       </div>
     </footer>
     <script>
-      const token = localStorage.getItem("token");
+      let token;
 
-      if(!token){
-          window.location.href = href="/login/login.html";
+      function verifyToken() {
+        token = localStorage.getItem("token");
+
+        if (!token) {
+          window.location.href = "/login/login.html";
+        }
       }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        verifyToken();
+      });
+
+      document.addEventListener("click", function () {
+        verifyToken();
+      });
     </script>
   </body>
 </html>
