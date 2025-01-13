@@ -13,7 +13,7 @@ function addRowClickEvent() {
     const rows = document.querySelectorAll("#inventoryTable tbody tr")
     rows.forEach(row => {
         row.addEventListener("click", () => {
-            const productName = row.querySelector("td").textContent.trim()
+            const productName = row.querySelector("td").textContent.toLowerCase().trim()
             showProductDetails(productName)
         })
     })
@@ -98,33 +98,44 @@ async function applySearchAndFilters() {
         return
     }
 
-    const searchInput = document.getElementById("searchInput").value.toLowerCase()
+    const searchInput = document.getElementById("searchInput").value.toLowerCase().trim()
     const stockFilter = document.getElementById("stockFilter").value
 
     try {
         if (isViewingProductDetails && currentProductData) {
             let filteredData = currentProductData.filter(item => {
+                const productName = item.productName?.toLowerCase() || ""
+                const currentStatus = item.currentStatus?.toLowerCase() || ""
+                const lastModified = item.lastModified?.toLowerCase() || ""
+                const modifiedBySoldier = item.modifiedBySoldier?.toLowerCase() || ""
+
                 const matchesSearch =
-                    item.productName.toLowerCase().includes(searchInput) ||
-                    item.currentStatus.toLowerCase().includes(searchInput) ||
-                    item.lastModified.toLowerCase().includes(searchInput) ||
-                    item.modifiedBySoldier.toLowerCase().includes(searchInput)
+                    productName.includes(searchInput) ||
+                    currentStatus.includes(searchInput) ||
+                    lastModified.includes(searchInput) ||
+                    modifiedBySoldier.includes(searchInput)
 
                 if (!stockFilter) {
                     return matchesSearch
                 }
 
+                console.log("Search Input:", searchInput)
+                console.log("Stock Filter:", stockFilter)
+                console.log("Item Status:", currentStatus)
+
                 switch (stockFilter) {
                     case 'totalAvailable':
-                        return matchesSearch && item.currentStatus.toLowerCase() === 'available'
+                        return matchesSearch && currentStatus.trim() === 'available'
                     case 'totalUnderMaintenance':
-                        return matchesSearch && item.currentStatus.toLowerCase() === 'under maintenance'
+                        return matchesSearch && currentStatus.trim() === 'under repair'
                     case 'totalAssigned':
-                        return matchesSearch && item.currentStatus.toLowerCase() === 'assigned'
+                        return matchesSearch && currentStatus.trim() === 'assigned'
                     default:
                         return matchesSearch
                 }
             })
+
+            console.log("Filtered Data:", filteredData)
 
             const start = (currentPage - 1) * rowsPerPage
             const end = start + rowsPerPage
@@ -144,6 +155,9 @@ async function applySearchAndFilters() {
             }
 
             const jsonData = await res.json()
+
+            console.log("API Response:", jsonData)
+
             let filteredData = jsonData.filter(item => {
                 const isMatchingName = item.productName.toLowerCase().includes(searchInput)
 
@@ -170,6 +184,7 @@ async function applySearchAndFilters() {
         document.querySelector("#pagination").innerHTML = ""
     }
 }
+
 
 
 
