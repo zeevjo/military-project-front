@@ -255,7 +255,7 @@ setStatusBTN.addEventListener("click", async function(event){
         }else{
             status = 2;
         }
-
+        
         if(result.isConfirmed){
             try {
                 const response = await fetch('http://localhost:8080/api/stock/status', {
@@ -265,15 +265,27 @@ setStatusBTN.addEventListener("click", async function(event){
                         Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify({
-                        soldierId: result.value,
-                        stockId: currentProduct.stockId,
-                        newStatus: productStatus
+                        productStockId: Number(currentProduct.stockId),
+                        newStatusId: status,
+                        changedBy: Number(result.value),
                     })
                 });
     
                 const data = await response.json();
-                Swal.fire('Entered v1alue:', result.value, 'success');
-                
+                console.log(data);
+                if(data.success){
+                    Swal.fire({
+                        title: "Status Updated",
+                        text: `${data.message}`,
+                        icon: "success"
+                    });
+                }else{
+                    Swal.fire({
+                        title: "Something went worng",
+                        text: `${data.message}`,
+                        icon: "error"
+                    });
+                }
             } catch (error) {
                 console.error('Error:', error);
                 Swal.fire('Something went wrong', 'please try again later', 'error');
