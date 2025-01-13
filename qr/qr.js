@@ -32,17 +32,21 @@ const qrCodeSuccessCallback = (decodedText, decodedResult) => {
 
     fetch(`http://localhost:8080/api/stock/item?id=${encodeURIComponent(decodedText)}`, {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
         },
-        Authorization: `Bearer ${token}`
     })
         .then(response => response.json())
         .then(data => {
-            console.log('got item data successful:', data)
+            console.log('got item data successful:', data);
+
             currentProduct = data;
+            assigningDiv.style.display = "none";
+
             productName.innerHTML = data.productName
             productDescription.innerHTML = data.productType
             productStatus.innerHTML = data.currentStatus
+
             if (data.assignedTo != undefined) {
                 assignedTo.innerHTML = data?.assignedTo
             }
@@ -64,7 +68,7 @@ const qrCodeSuccessCallback = (decodedText, decodedResult) => {
             }
             
             if (data.currentStatus === "Assigned" || data.currentStatus === "Available") {
-                setStatusBTN.innerHTML = `Mark as Under Repair`
+                setStatusBTN.innerHTML = `Under Repair`
                 setStatusBTN.setAttribute("key", "UnderRepair");
             }
             
