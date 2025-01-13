@@ -13,7 +13,6 @@ function addRowClickEvent() {
     const rows = document.querySelectorAll("#inventoryTable tbody tr")
     rows.forEach(row => {
         row.addEventListener("click", () => {
-            resetFilters()
             const productName = row.querySelector("td").textContent.trim()
             showProductDetails(productName)
         })
@@ -216,9 +215,19 @@ function populateDetailsTable(data) {
 
     data.forEach(item => {
         const row = document.createElement("tr")
+
+        let statusColor = ''
+        if (item.currentStatus.toLowerCase() === "available") {
+            statusColor = '#609966'
+        } else if (item.currentStatus.toLowerCase() === "assigned") {
+            statusColor = '#F4CE14'
+        } else if (item.currentStatus.toLowerCase() === "underrepair") {
+            statusColor = '#E84545'
+        }
+
         row.innerHTML = `
             <td>${item.productName}</td>
-            <td>${item.currentStatus}</td>
+            <td style="color:${statusColor};">${item.currentStatus}</td>
             <td>${item.lastModified}</td>
             <td>${item.modifiedBySoldier}</td>
         `
