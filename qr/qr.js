@@ -14,67 +14,67 @@ const qrCamera = document.querySelector('.qr-camera')
 const qrCodeScanner = new Html5Qrcode("qr-reader")
 
 let isScanning = true
-let currentProduct;
+let currentProduct
 
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("token")
 
-if(!token){
-    window.location.href = href="/login/login.html";
+if (!token) {
+    window.location.href = href = "/login/login.html"
 }
 
 const qrCodeSuccessCallback = async (decodedText, decodedResult) => {
     try {
-        stopScanning();
+        stopScanning()
 
         const response = await fetch(`http://localhost:8080/api/stock/item?id=${encodeURIComponent(decodedText)}`, {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`
             },
-        });
+        })
 
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error('Network response was not ok')
         }
 
-        const data = await response.json();
-        console.log('got item data successful:', data);
+        const data = await response.json()
+        console.log('got item data successful:', data)
 
-        currentProduct = data;
+        currentProduct = data
 
-        productName.innerHTML = data.productName;
-        productDescription.innerHTML = data.productType;
-        productStatus.innerHTML = data.currentStatus;
+        productName.innerHTML = data.productName
+        productDescription.innerHTML = data.productType
+        productStatus.innerHTML = data.currentStatus
 
         if (data.assignedTo !== undefined) {
-            assignedTo.innerHTML = data?.assignedTo;
+            assignedTo.innerHTML = data?.assignedTo
         }
 
-        qrCamera.style.display = "none";
-        qrBTNS.style.display = "flex";
+        qrCamera.style.display = "none"
+        qrBTNS.style.display = "flex"
 
-        console.log(data.currentStatus);
+        console.log(data.currentStatus)
 
         if (data.currentStatus === "Available") {
-            assignSoldier.style.display = "block";
+            assignSoldier.style.display = "block"
         }
 
         if (data.currentStatus === "UnderRepair") {
-            setStatusBTN.innerHTML = `Set to Available`;
-            setStatusBTN.setAttribute("key", "Available");
+            setStatusBTN.innerHTML = `Set to Available`
+            setStatusBTN.setAttribute("key", "Available")
         }
 
         if (data.currentStatus === "Assigned" || data.currentStatus === "Available") {
-            setStatusBTN.innerHTML = `Under Repair`;
-            setStatusBTN.setAttribute("key", "UnderRepair");
+            setStatusBTN.innerHTML = `Under Repair`
+            setStatusBTN.setAttribute("key", "UnderRepair")
         }
 
     } catch (error) {
-        errorAssign.style.display = 'block';
-        errorAssign.innerHTML = 'Error: ' + error.message;
-        console.error('Error:', error);
+        errorAssign.style.display = 'block'
+        errorAssign.innerHTML = 'Error: ' + error.message
+        console.error('Error:', error)
     }
-};
+}
 
 
 qrCodeScanner.start(
@@ -116,7 +116,7 @@ function currentDate() {
     const now = new Date()
 
     const year = now.getFullYear()
-    const month = now.getMonth() + 1 
+    const month = now.getMonth() + 1
     const day = now.getDate()
     const hours = now.getHours()
     const minutes = now.getMinutes()
@@ -140,7 +140,7 @@ tryAgainBTN.addEventListener('click', function () {
         console.log("Scanner is already running. Cannot start again.")
         return
     }
-    
+
     productName.innerText = ''
     productDescription.innerText = ''
     productStatus.innerText = ''
@@ -151,20 +151,7 @@ tryAgainBTN.addEventListener('click', function () {
 
     isScanning = true
 
-    qrCodeScanner
-        .start(
-            { facingMode: "environment" },
-            {
-                fps: 10,
-                qrbox: 150
-            },
-            qrCodeSuccessCallback,
-            (errorAssign) => {
-            }
-        )
-        .catch(err => {
-            console.error("Error restarting scanner: " + err)
-        })
+    window.location.reload()
 })
 
 function stopScanning() {
@@ -182,13 +169,13 @@ function stopScanning() {
 
 assignSoldier.addEventListener('click', function () {
     Swal.mixin({
-        confirmButtonColor: 'rgb(155 197 143)', 
-        cancelButtonColor: 'rgb(201 99 122)', 
+        confirmButtonColor: 'rgb(155 197 143)',
+        cancelButtonColor: 'rgb(201 99 122)',
     }).fire({
         title: 'Enter Personal Number',
-        input: 'text', 
+        input: 'text',
         inputAttributes: {
-            maxlength: 10, 
+            maxlength: 10,
             placeholder: 'Enter only digits'
         },
         confirmButtonText: 'Submit',
@@ -196,38 +183,38 @@ assignSoldier.addEventListener('click', function () {
         cancelButtonText: 'Cancel',
         preConfirm: (value) => {
             if (!/^\d+$/.test(value)) {
-                Swal.showValidationMessage('Please enter digits only!');
-                return false;
+                Swal.showValidationMessage('Please enter digits only!')
+                return false
             }
             if (!value) {
-                Swal.showValidationMessage('Please enter digits!');
-                return false;
+                Swal.showValidationMessage('Please enter digits!')
+                return false
             }
-            return value;
+            return value
         }
     }).then((result) => {
         if (result.isConfirmed) {
             localStorage.setItem('stockId', currentProduct.stockId)
             localStorage.setItem('soldierId', Number(result.value))
             localStorage.setItem('assignmentDate', currentDate())
-        
-            Swal.fire('Entered value:', result.value, 'success');
-            
-            window.location.href = "/2FA/twofa.html";
-        }
-    });
-});
 
-setStatusBTN.addEventListener("click", async function(event){
-    const productStatus = event.target.getAttribute("key");
-    console.log(productStatus);
+            Swal.fire('Entered value:', result.value, 'success')
+
+            window.location.href = "/2FA/twofa.html"
+        }
+    })
+})
+
+setStatusBTN.addEventListener("click", async function (event) {
+    const productStatus = event.target.getAttribute("key")
+    console.log(productStatus)
 
     Swal.mixin({
-        confirmButtonColor: 'rgb(155 197 143)', 
-        cancelButtonColor: 'rgb(201 99 122)', 
+        confirmButtonColor: 'rgb(155 197 143)',
+        cancelButtonColor: 'rgb(201 99 122)',
     }).fire({
         title: 'Enter Personal Number',
-        input: 'text', 
+        input: 'text',
         inputAttributes: {
             placeholder: 'Enter only digits'
         },
@@ -240,24 +227,31 @@ setStatusBTN.addEventListener("click", async function(event){
         },
         preConfirm: (value) => {
             if (!/^\d+$/.test(value)) {
-                Swal.showValidationMessage('Please enter digits only!');
-                return false;
+                Swal.showValidationMessage('Please enter digits only!')
+                return false
             }
-            return value;
+            return value
         }
     }).then(async (result) => {
-        let status;
+        let status
 
-        if(productStatus === "Avaiable"){
-            status = 1;
-        }else if(productStatus === "UnderRepair"){
-            status = 3;
-        }else{
-            status = 2;
+        if (productStatus === "Available") {
+            status = 1
+        } else if (productStatus === "UnderRepair") {
+            status = 3
+        } else {
+            status = 2
         }
-        
-        if(result.isConfirmed){
+
+        console.log('JSON.stringify', JSON.stringify({
+            productStockId: Number(currentProduct.stockId),
+            newStatusId: status,
+            changedBy: Number(result.value),
+        }))
+
+        if (result.isConfirmed) {
             try {
+
                 const response = await fetch('http://localhost:8080/api/stock/status', {
                     method: 'POST',
                     headers: {
@@ -269,28 +263,43 @@ setStatusBTN.addEventListener("click", async function(event){
                         newStatusId: status,
                         changedBy: Number(result.value),
                     })
-                });
-    
-                const data = await response.json();
-                console.log(data);
-                if(data.success){
+                })
+
+                const data = await response.json()
+                console.log(data)
+                if (data.success) {
                     Swal.fire({
                         title: "Status Updated",
                         text: `${data.message}`,
                         icon: "success"
-                    });
-                }else{
+                    })
+
+                    qrCodeScanner.start(
+                        { facingMode: "environment" },
+                        {
+                            fps: 10,
+                            qrbox: 150
+                        },
+                        qrCodeSuccessCallback,
+                        (errorAssign) => {
+
+                        }
+                    ).catch(err => {
+                        console.log("הייתה בעיה בהפעלת הסורק: " + err)
+                    })
+                } else {
                     Swal.fire({
                         title: "Something went worng",
                         text: `${data.message}`,
                         icon: "error"
-                    });
+                    })
+                    qrCodeSuccessCallback()
                 }
             } catch (error) {
-                console.error('Error:', error);
-                Swal.fire('Something went wrong', 'please try again later', 'error');
+                console.error('Error:', error)
+                Swal.fire('Something went wrong', 'please try again later', 'error')
             }
         }
 
-    });
-});
+    })
+})
