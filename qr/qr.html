@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>סורק QR</title>
     <link rel="stylesheet" href="qr.css" />
-  </head>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.29/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.29/dist/sweetalert2.min.js"></script>
 
+  </head>
   <body>
     <header>
       <nav class="navbar">
@@ -37,16 +39,6 @@
         <span id="productDescription"></span>
         <span id="productStatus"></span>
         <span id="assignedTo"></span>
-      </div>
-      <div id="assigningDiv">
-        <label for="soldierId">Personal number</label>
-        <input
-          type="text"
-          id="soldierId"
-          name="soldierId"
-          placeholder="Enter soldier personal number"
-          required
-        />
       </div>
       <div class="qrBTNS">
         <button id="tryAgainBTN">Scan Again</button>

@@ -76,7 +76,8 @@ document.querySelector(".getcode-btn").addEventListener("click", function () {
       fetch("http://localhost:8080/api/assign", {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(assignData)
       })
@@ -88,9 +89,7 @@ document.querySelector(".getcode-btn").addEventListener("click", function () {
         })
         .catch(error => {
           console.error('Error:', error)
-        })
-
-      // document.getElementById("otp-input").value()
+        });
     } else {
       alert("Incorrect code. Please try again.")
     }

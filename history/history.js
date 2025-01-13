@@ -1,14 +1,26 @@
-let historyData
-let currentPage = 1
-const rowsPerPage = 15  // Number of rows per page
+let historyData;
+let currentPage = 1;
+const rowsPerPage = 15;
 
-const token = localStorage.getItem("token")
+let token;
 
-if (!token) {
-    window.location.href = href = "/login/login.html"
+function verifyToken(){
+    token = localStorage.getItem("token");
+
+    if(!token){
+        window.location.href = href="/login/login.html";
+    }
 }
 
-async function getHistory() {
+document.addEventListener('DOMContentLoaded', function() {
+    verifyToken();
+});
+
+document.addEventListener('mouseover', function() {
+    verifyToken();
+});
+
+async function getHistory(){
     try {
         const res = await fetch('http://localhost:8080/api/history', {
             method: "GET",
@@ -61,10 +73,10 @@ function populateTable(data) {
             <td>${item.soldierName === undefined ? "" : item.soldierName}</td>
             <td>${item.modificationDate}</td>
         `
-        tableBody.appendChild(row)
+        tableBody.appendChild(row);
     })
 
-    updatePaginationButtons(data.length)
+    updatePaginationButtons(data.length);
 }
 
 function applySearchAndFilters() {
