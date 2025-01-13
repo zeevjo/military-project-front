@@ -35,8 +35,8 @@ async function getHistory(){
         }
 
         historyData = await res.json()
-        console.log(historyData);
-        populateTable(historyData);
+        console.log(historyData)
+        populateTable(historyData)
     } catch (error) {
         console.error("Failed to fetch or process data:", error)
         populateTable([])
@@ -45,7 +45,7 @@ async function getHistory(){
 }
 
 function populateTable(data) {
-    console.log(data);
+    console.log(data)
     const tableBody = document.querySelector("#inventoryTable tbody")
     tableBody.innerHTML = ""
 
@@ -54,9 +54,21 @@ function populateTable(data) {
 
     paginatedData.forEach(item => {
         const row = document.createElement("tr")
+
+        let statusColor = ''
+        const status = item.currentStatus.toLowerCase()
+
+        if (status === "available") {
+            statusColor = '#609966'
+        } else if (status === "assigned") {
+            statusColor = '#F4CE14'
+        } else if (status === "under maintenance") {
+            statusColor = '#E84545'
+        }
+
         row.innerHTML = `
             <td>${item.productName}</td>
-            <td>${item.currentStatus}</td>
+            <td style="color:${statusColor};">${item.currentStatus}</td>
             <td>${item.soldierId === undefined ? "" : item.soldierId}</td>
             <td>${item.soldierName === undefined ? "" : item.soldierName}</td>
             <td>${item.modificationDate}</td>
@@ -197,5 +209,5 @@ function exportTableToCSV() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    getHistory();
+    getHistory()
 })
