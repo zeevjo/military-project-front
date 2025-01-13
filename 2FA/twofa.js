@@ -3,23 +3,23 @@
   emailjs.init("t73-CEmjPINBtcZxm")
 })()
 
-let token;
+let token
 
-function verifyToken(){
-    token = localStorage.getItem("token");
+function verifyToken() {
+  token = localStorage.getItem("token")
 
-    if(!token){
-        window.location.href = href="/login/login.html";
-    }
+  if (!token) {
+    window.location.href = href = "/login/login.html"
+  }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    verifyToken();
-});
+document.addEventListener('DOMContentLoaded', function () {
+  verifyToken()
+})
 
-document.addEventListener('mouseover', function() {
-    verifyToken();
-});
+document.addEventListener('click', function () {
+  verifyToken()
+})
 
 function generateOTP() {
   return Math.floor(1000 + Math.random() * 9000).toString()
@@ -28,10 +28,10 @@ function generateOTP() {
 document.querySelector(".getcode-btn").addEventListener("click", function () {
   const recipientEmail = localStorage.getItem('username')
   if (!recipientEmail) {
-    alertify.alert("This is an alert dialog.", function(){
+    alertify.alert("This is an alert dialog.", function () {
       alertify.error("No email found. Please log in first.")
-    });
-    
+    })
+
     window.location.href = "../login/login.html"
     return
   }
@@ -50,7 +50,7 @@ document.querySelector(".getcode-btn").addEventListener("click", function () {
       .then(
         function (response) {
           console.log("Email sent:", response)
-          alertify.success("Email sent");
+          alertify.success("Email sent")
         },
         function (error) {
           console.error("Error:", error)
@@ -94,15 +94,15 @@ document.querySelector(".getcode-btn").addEventListener("click", function () {
           console.error('Error:', error)
         })
     } else {
-      alertify.error("Incorrect code");
+      alertify.error("Incorrect code")
     }
   })
 
   document.getElementById("resend-code").addEventListener("click", function () {
     generatedOTP = generateOTP()
     console.log(`New Generated OTP: ${generatedOTP}`)
-    sendOTPEmail(recipientEmail, generatedOTP);
-    alertify.success("Email resend");
+    sendOTPEmail(recipientEmail, generatedOTP)
+    alertify.success("Email resend")
   })
 })
 

@@ -217,8 +217,8 @@ nav .profile-icon img:hover {
 
 #backButton {
   position: absolute;
-  top: 25px;
-  right: 10px;
+  top: 24px;
+  right: 42rem;
   background-color: var(--gray-100);
   padding: 8px 16px;
   border: none;

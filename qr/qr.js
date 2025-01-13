@@ -16,11 +16,23 @@ const qrCodeScanner = new Html5Qrcode("qr-reader")
 let isScanning = true
 let currentProduct
 
-const token = localStorage.getItem("token")
+let token
 
-if (!token) {
-    window.location.href = href = "/login/login.html"
+function verifyToken() {
+    token = localStorage.getItem("token")
+
+    if (!token) {
+        window.location.href = "/login/login.html"
+    }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    verifyToken()
+})
+
+document.addEventListener('click', function () {
+    verifyToken()
+})
 
 const qrCodeSuccessCallback = async (decodedText, decodedResult) => {
     try {
@@ -60,35 +72,35 @@ const qrCodeSuccessCallback = async (decodedText, decodedResult) => {
         }
 
         if (data.currentStatus === "UnderRepair") {
-            const btnSetAvailable = document.createElement('button');
-            btnSetAvailable.id = 'setStatusBTN';
-            btnSetAvailable.setAttribute('key', 'Available');
-            btnSetAvailable.textContent = 'Set to Available';
-            qrBTNS.appendChild(btnSetAvailable);
+            const btnSetAvailable = document.createElement('button')
+            btnSetAvailable.id = 'setStatusBTN'
+            btnSetAvailable.setAttribute('key', 'Available')
+            btnSetAvailable.textContent = 'Set to Available'
+            qrBTNS.appendChild(btnSetAvailable)
         }
 
         if (data.currentStatus === "Assigned") {
             // Create "Set to Available" button
-            const btnSetAvailable = document.createElement('button');
-            btnSetAvailable.id = 'setStatusBTN';
-            btnSetAvailable.setAttribute('key', 'Available');
-            btnSetAvailable.textContent = 'Set to Available';
-            qrBTNS.appendChild(btnSetAvailable);
+            const btnSetAvailable = document.createElement('button')
+            btnSetAvailable.id = 'setStatusBTN'
+            btnSetAvailable.setAttribute('key', 'Available')
+            btnSetAvailable.textContent = 'Set to Available'
+            qrBTNS.appendChild(btnSetAvailable)
 
             // Create "Set to Under Repair" button
-            const btnSetUnderRepair = document.createElement('button');
-            btnSetUnderRepair.id = 'setStatusBTN';
-            btnSetUnderRepair.setAttribute('key', 'UnderRepair');
-            btnSetUnderRepair.textContent = 'Under Repair';
-            qrBTNS.appendChild(btnSetUnderRepair);
+            const btnSetUnderRepair = document.createElement('button')
+            btnSetUnderRepair.id = 'setStatusBTN'
+            btnSetUnderRepair.setAttribute('key', 'UnderRepair')
+            btnSetUnderRepair.textContent = 'Under Repair'
+            qrBTNS.appendChild(btnSetUnderRepair)
         }
 
         if (data.currentStatus === "Available") {
-            const btnSetUnderRepair = document.createElement('button');
-            btnSetUnderRepair.id = 'setStatusBTN';
-            btnSetUnderRepair.setAttribute('key', 'UnderRepair');
-            btnSetUnderRepair.textContent = 'Under Repair';
-            qrBTNS.appendChild(btnSetUnderRepair);
+            const btnSetUnderRepair = document.createElement('button')
+            btnSetUnderRepair.id = 'setStatusBTN'
+            btnSetUnderRepair.setAttribute('key', 'UnderRepair')
+            btnSetUnderRepair.textContent = 'Under Repair'
+            qrBTNS.appendChild(btnSetUnderRepair)
         }
 
 
@@ -231,8 +243,8 @@ assignSoldier.addEventListener('click', function () {
 qrBTNS.addEventListener("click", async function (event) {
     const productStatus = event.target.getAttribute("key")
     console.log(productStatus)
-    if(productStatus === null){
-        return;
+    if (productStatus === null) {
+        return
     }
 
     Swal.mixin({

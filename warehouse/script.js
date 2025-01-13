@@ -3,11 +3,23 @@ const rowsPerPage = 15
 let currentPage = 1
 let isViewingProductDetails = false
 
-const token = localStorage.getItem("token")
+let token
 
-if (!token) {
-    window.location.href = href = "/login/login.html"
+function verifyToken() {
+    token = localStorage.getItem("token")
+
+    if (!token) {
+        window.location.href = "/login/login.html"
+    }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    verifyToken()
+})
+
+document.addEventListener('click', function () {
+    verifyToken()
+})
 
 function addRowClickEvent() {
     const rows = document.querySelectorAll("#inventoryTable tbody tr")
@@ -54,7 +66,6 @@ async function showProductDetails(productName) {
                 <th>Modified By Soldier</th>
             </tr>
         `
-
         currentPage = 1
         populateDetailsTable(productDetails.slice(0, rowsPerPage))
         updatePagination(productDetails)
