@@ -137,6 +137,12 @@ const jsonData = [
 let currentPage = 1
 const rowsPerPage = 15  // Number of rows per page
 
+const token = localStorage.getItem("token");
+
+if(!token){
+    window.location.href = href="/login/login.html";
+}
+
 function populateTable(data) {
     const tableBody = document.querySelector("#inventoryTable tbody")
     tableBody.innerHTML = ""
