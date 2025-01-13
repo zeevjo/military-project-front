@@ -1,139 +1,4 @@
-const jsonData = [
-    {
-        "productName": "M4 Rifle",
-        "status": "Assigned",
-        "soldierId": "54321",
-        "soldierFullName": "Sarah Johnson",
-        "date": "2023-02-10"
-    },
-    {
-        "productName": "M16 Rifle",
-        "status": "In Stock",
-        "soldierId": "23456",
-        "soldierFullName": "Mike Wilson",
-        "date": "2023-03-22"
-    },
-    {
-        "productName": "M4 Carbine",
-        "status": "Under Maintenance",
-        "soldierId": "34567",
-        "soldierFullName": "Emily Davis",
-        "date": "2023-04-12"
-    },
-    {
-        "productName": "M4A1 Carbine",
-        "status": "Available",
-        "soldierId": "45678",
-        "soldierFullName": "Jason Miller",
-        "date": "2023-05-17"
-    },
-    {
-        "productName": "M14 Rifle",
-        "status": "Assigned",
-        "soldierId": "56789",
-        "soldierFullName": "Sophia Taylor",
-        "date": "2023-06-21"
-    },
-    {
-        "productName": "Glock 17",
-        "status": "In Stock",
-        "soldierId": "67890",
-        "soldierFullName": "Joshua Martinez",
-        "date": "2023-07-14"
-    },
-    {
-        "productName": "Glock 19",
-        "status": "Available",
-        "soldierId": "78901",
-        "soldierFullName": "Rachel Moore",
-        "date": "2023-08-09"
-    },
-    {
-        "productName": "M249 SAW",
-        "status": "In Stock",
-        "soldierId": "89012",
-        "soldierFullName": "David Lee",
-        "date": "2023-09-03"
-    },
-    {
-        "productName": "M240 Machine Gun",
-        "status": "Under Maintenance",
-        "soldierId": "90123",
-        "soldierFullName": "Olivia Anderson",
-        "date": "2023-10-15"
-    },
-    {
-        "productName": "Night Vision Goggles",
-        "status": "Assigned",
-        "soldierId": "10234",
-        "soldierFullName": "Ethan Harris",
-        "date": "2023-11-28"
-    },
-    {
-        "productName": "First Aid Kit",
-        "status": "In Stock",
-        "soldierId": "21345",
-        "soldierFullName": "Ava Clark",
-        "date": "2023-12-09"
-    },
-    {
-        "productName": "Granede",
-        "status": "Avaiable",
-        "soldierId": "21345",
-        "soldierFullName": "Ava Clark",
-        "date": "2023-12-09"
-    },
-    {
-        "productName": "First Aid Kit",
-        "status": "In Stock",
-        "soldierId": "21345",
-        "soldierFullName": "Ava Clark",
-        "date": "2023-12-09"
-    },
-    {
-        "productName": "M240B Machine Gun",
-        "status": "In Stock",
-        "soldierId": "21395",
-        "soldierFullName": "Ava Clark",
-        "date": "2023-12-09"
-    },
-    {
-        "productName": "M249 SAW",
-        "status": "Available",
-        "soldierId": "32456",
-        "soldierFullName": "Lucas Scott",
-        "date": "2024-01-10"
-    },
-    {
-        "productName": "M240B Machine Gun",
-        "status": "In Stock",
-        "soldierId": "43567",
-        "soldierFullName": "Mason Robinson",
-        "date": "2024-02-18"
-    },
-    {
-        "productName": "Binoculars",
-        "status": "Assigned",
-        "soldierId": "54678",
-        "soldierFullName": "Grace White",
-        "date": "2024-03-01"
-    },
-    {
-        "productName": "Radio Set",
-        "status": "Available",
-        "soldierId": "65789",
-        "soldierFullName": "Henry Jackson",
-        "date": "2024-04-12"
-    },
-    {
-        "productName": "Transport Vehicle (Humvee)",
-        "status": "In Stock",
-        "soldierId": "76890",
-        "soldierFullName": "Amelia Lewis",
-        "date": "2024-05-24"
-    }
-]
-
+let historyData;
 let currentPage = 1
 const rowsPerPage = 15  // Number of rows per page
 
@@ -143,7 +8,32 @@ if(!token){
     window.location.href = href="/login/login.html";
 }
 
+async function getHistory(){
+    try {
+        const res = await fetch('http://localhost:8080/api/history', {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        })
+
+        if (!res.ok) {
+            throw new Error(`Error: ${res.status} - ${res.statusText}`)
+        }
+
+        historyData = await res.json()
+        console.log(historyData);
+        populateTable(historyData);
+    } catch (error) {
+        console.error("Failed to fetch or process data:", error)
+        populateTable([])
+        document.querySelector("#pagination").innerHTML = ""
+    }
+}
+
 function populateTable(data) {
+    console.log(data);
     const tableBody = document.querySelector("#inventoryTable tbody")
     tableBody.innerHTML = ""
 
@@ -154,10 +44,10 @@ function populateTable(data) {
         const row = document.createElement("tr")
         row.innerHTML = `
             <td>${item.productName}</td>
-            <td>${item.status}</td>
-            <td>${item.soldierId}</td>
-            <td>${item.soldierFullName}</td>
-            <td>${item.date}</td>
+            <td>${item.currentStatus}</td>
+            <td>${item.soldierId === undefined ? "" : item.soldierId}</td>
+            <td>${item.soldierName === undefined ? "" : item.soldierName}</td>
+            <td>${item.modificationDate}</td>
         `
         tableBody.appendChild(row)
     })
@@ -169,7 +59,7 @@ function applySearchAndFilters() {
     const searchValue = document.getElementById("searchInput").value.toLowerCase()
     const historyFilterValue = document.getElementById("historyFilter").value
 
-    const filteredData = jsonData.filter(item => {
+    const filteredData = historyData.filter(item => {
         const matchesSearch = item.productName.toLowerCase().includes(searchValue)
 
         let matchesStatus = true
@@ -193,7 +83,7 @@ function applySearchAndFilters() {
 function applySort() {
     const sortValue = document.getElementById("sortSelect").value
 
-    let sortedData = [...jsonData]
+    let sortedData = [...historyData]
 
     switch (sortValue) {
         case "productType":
@@ -220,7 +110,7 @@ function applySort() {
 }
 
 function changePage(direction) {
-    const filteredData = jsonData.filter(item => {
+    const filteredData = historyData.filter(item => {
         const searchValue = document.getElementById("searchInput").value.toLowerCase()
         const historyFilterValue = document.getElementById("historyFilter").value
 
@@ -264,9 +154,36 @@ function resetFilters() {
     document.getElementById("historyFilter").value = ""
     document.getElementById("sortSelect").value = ""
     currentPage = 1
-    populateTable(jsonData)
+    populateTable(historyData)
+}
+
+function exportTableToCSV() {
+    const table = document.getElementById("inventoryTable")
+    const rows = table.querySelectorAll("tr")
+
+    let csvContent = "Product Type,Status,Soldier ID,Soldier Full Name,Date\n"
+
+    rows.forEach((row, index) => {
+        const cols = row.querySelectorAll("td, th")
+        const rowArray = []
+        cols.forEach(col => {
+            rowArray.push(col.textContent.trim())
+        })
+
+        if (rowArray.length > 0) {
+            csvContent += rowArray.join(",") + "\n"
+        }
+    })
+
+    const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent)
+    const link = document.createElement("a")
+    link.setAttribute("href", encodedUri)
+    link.setAttribute("download", "history_report.csv")
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    populateTable(jsonData)
+    getHistory();
 })
