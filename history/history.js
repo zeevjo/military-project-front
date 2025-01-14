@@ -61,15 +61,17 @@ function populateTable(data) {
             statusColor = '#609966'
         } else if (status === "assigned") {
             statusColor = '#F4CE14'
-        } else if (status === "under maintenance") {
+        } else if (status === "underrepair") {
             statusColor = '#E84545'
         }
 
         row.innerHTML = `
             <td>${item.productName}</td>
             <td style="color:${statusColor};">${item.currentStatus}</td>
+
             <td>${item.soldierId === undefined ? "" : item.soldierId}</td>
             <td>${item.soldierName === undefined ? "" : item.soldierName}</td>
+
             <td>${item.modificationDate}</td>
         `
         tableBody.appendChild(row)
@@ -79,29 +81,35 @@ function populateTable(data) {
 }
 
 function applySearchAndFilters() {
-    const searchValue = document.getElementById("searchInput").value.toLowerCase()
-    const historyFilterValue = document.getElementById("historyFilter").value.toLowerCase()
+    const searchValue = document.getElementById("searchInput").value.toLowerCase();
+    const historyFilterValue = document.getElementById("historyFilter").value.toLowerCase();
 
     const filteredData = historyData.filter(item => {
-        const matchesSearch = item.productName.toLowerCase().includes(searchValue)
+        const matchesSearch = item.productName.toLowerCase().includes(searchValue);
+        
+        // Debugging logs
+        console.log(matchesSearch);
+        console.log(historyFilterValue);
+        
+        let matchesStatus = true;
 
-        let matchesStatus = true
-        if (historyFilterValue === "instock") {
-            matchesStatus = item.status.toLowerCase() === "in stock"
-        } else if (historyFilterValue === "available") {
-            matchesStatus = item.status.toLowerCase() === "available"
+        // Ensure you're comparing with the correct property
+        if (historyFilterValue === "available") {
+            matchesStatus = item.currentStatus.toLowerCase() === "available";
         } else if (historyFilterValue === "undermaintenance") {
-            matchesStatus = item.status.toLowerCase() === "under maintenance"
+            matchesStatus = item.currentStatus.toLowerCase() === "underrepair";
         } else if (historyFilterValue === "assigned") {
-            matchesStatus = item.status.toLowerCase() === "assigned"
+            matchesStatus = item.currentStatus.toLowerCase() === "assigned";
         }
 
-        return matchesSearch && matchesStatus
-    })
+        return matchesSearch && matchesStatus;
+    });
 
-    currentPage = 1
-    populateTable(filteredData)
+    console.log(filteredData)
+    currentPage = 1;
+    populateTable(filteredData);
 }
+
 
 function applySort() {
     const sortValue = document.getElementById("sortSelect").value
@@ -175,7 +183,7 @@ function updatePaginationButtons(totalRows) {
 function resetFilters() {
     document.getElementById("searchInput").value = ""
     document.getElementById("historyFilter").value = ""
-    document.getElementById("sortSelect").value = ""
+
     currentPage = 1
     populateTable(historyData)
 }

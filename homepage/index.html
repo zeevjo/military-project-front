@@ -9,6 +9,8 @@
       src="https://kit.fontawesome.com/572b007657.js"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.29/dist/sweetalert2.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.29/dist/sweetalert2.min.css" rel="stylesheet"/>
   </head>
   <body>
     <header>
@@ -73,6 +75,44 @@
       document.addEventListener("click", function () {
         verifyToken();
       });
+
+      const user = localStorage.getItem('username');
+      const logoutBTN = document.querySelector(".profile-icon");
+
+      logoutBTN.addEventListener('click', function(){
+        Swal.fire({
+          title: "Do you want to log out?",
+          html: `Current user: ${user}`,
+          showCancelButton: true,
+          confirmButtonText: "Log-Out",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            let timerInterval;
+            Swal.fire({
+              title: "Loging you out!",
+              html: "Log in <b></b> milliseconds.",
+              timer: 1200,
+              timerProgressBar: true,
+              didOpen: () => {
+                Swal.showLoading();
+                const timer = Swal.getPopup().querySelector("b");
+                timerInterval = setInterval(() => {
+                  timer.textContent = `${Swal.getTimerLeft()}`;
+                }, 100);
+              },
+              willClose: () => {
+                clearInterval(timerInterval);
+              }
+            }).then((result) => {
+              localStorage.removeItem("token");
+              verifyToken();
+              if (result.dismiss === Swal.DismissReason.timer) {
+                console.log("I was closed by the timer");
+              }
+            });
+          }
+        });
+      })
     </script>
   </body>
 </html>
