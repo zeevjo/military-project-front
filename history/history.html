@@ -48,23 +48,12 @@
             oninput="applySearchAndFilters()"
           />
           <div>
-            <label for="historyFilter">Filter by:</label>
+            <label for="historyFilter">Filter by Stock Availability:</label>
             <select id="historyFilter" onchange="applySearchAndFilters()">
               <option value="">All</option>
-              <option value="inStock">In Stock</option>
               <option value="available">Available</option>
               <option value="underMaintenance">Under Maintenance</option>
               <option value="assigned">Assigned</option>
-            </select>
-            <br />
-            <label for="sortSelect">Sort by:</label>
-            <select id="sortSelect" onchange="applySort()">
-              <option value="">Select</option>
-              <option value="productType">Product Type</option>
-              <option value="status">Status</option>
-              <option value="soldierId">Soldier ID</option>
-              <option value="soldierFullName">Soldier Full Name</option>
-              <option value="date">Date</option>
             </select>
           </div>
           <button onclick="resetFilters()" class="reset-button">

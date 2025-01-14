@@ -58,8 +58,13 @@ const qrCodeSuccessCallback = async (decodedText, decodedResult) => {
         productDescription.innerHTML = data.productType
         productStatus.innerHTML = data.currentStatus
 
-        if (data.assignedTo !== undefined) {
+        console.log(data.currentStatus)
+        if (data.assignedTo !== undefined || data.currentStatus === "Available") {
             assignedTo.innerHTML = data?.assignedTo
+        }
+
+        if (data.currentStatus === "Available") {
+            assignedTo.innerHTML = '';
         }
 
         qrCamera.style.display = "none"
@@ -80,14 +85,12 @@ const qrCodeSuccessCallback = async (decodedText, decodedResult) => {
         }
 
         if (data.currentStatus === "Assigned") {
-            // Create "Set to Available" button
             const btnSetAvailable = document.createElement('button')
             btnSetAvailable.id = 'setStatusBTN'
             btnSetAvailable.setAttribute('key', 'Available')
             btnSetAvailable.textContent = 'Set to Available'
             qrBTNS.appendChild(btnSetAvailable)
 
-            // Create "Set to Under Repair" button
             const btnSetUnderRepair = document.createElement('button')
             btnSetUnderRepair.id = 'setStatusBTN'
             btnSetUnderRepair.setAttribute('key', 'UnderRepair')

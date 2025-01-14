@@ -103,6 +103,12 @@ label {
   width: 6rem;
 }
 
+#historyFilter{
+  width: 200px;
+  border-radius: 4px;
+  border: 1px solid var(--gray-300);
+}
+
 #searchInput {
   max-width: 300px; /* Limits the maximum size */
   width: 9rem;
